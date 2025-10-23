@@ -82,6 +82,7 @@ const asfiMeetFileUpload = (req, res) => {
       try {
         console.log("🚀 Uploading file to Cloudinary...");
         const cloudinaryUpload = await uploadToCloudinary(sourcePath);
+        console.log(cloudinaryUpload)
         const cloudinaryUrl = cloudinaryUpload.secure_url;
         console.log("✅ Cloudinary Upload Successful:", cloudinaryUrl);
 

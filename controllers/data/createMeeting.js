@@ -8,11 +8,13 @@ const createMeeting = async (req,res) =>{
         const userId = req.user.id
      
        // Function to capitalize each word and remove spaces
-        const formatTitle = (str) => {
-            return str
-                .replace(/\s+/g, '') // Remove all white spaces
-                .replace(/\b\w/g, char => char.toUpperCase()); // Capitalize each word
-        };
+const formatTitle = (str) => {
+    return str
+        .replace(/[^a-zA-Z0-9\s]/g, '') // Remove all special characters except letters, numbers, and spaces
+        .replace(/\s+/g, '')             // Remove all whitespace
+        .replace(/\b\w/g, char => char.toUpperCase()); // Capitalize each word
+};
+
 
         const rid = formatTitle(title);
         const secret = uuidv4();
