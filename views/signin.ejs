@@ -94,6 +94,9 @@
                 
                 <% if(typeof recaptcha_site_key !== 'undefined' ? recaptcha_site_key : (locals.recaptcha_site_key || '')) { %>
                 <div class="g-recaptcha" data-sitekey="<%= typeof recaptcha_site_key !== 'undefined' ? recaptcha_site_key : (locals.recaptcha_site_key || '') %>" data-callback="onLoginRecaptcha" data-expired-callback="onLoginRecaptchaExpired"></div>
+                <% } else{  %>
+                <input type="hidden" name="g-recaptcha-response" value="dummy">
+                no site key
                 <% } %>
 
                 <div class="space-y-3 mt-2">
