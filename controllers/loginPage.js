@@ -1,3 +1,5 @@
+const { config } = require("dotenv")
+config()
 const loginPage = async (req,res) =>{
     if(req.cookies.posterUser){
         res.redirect("/dashboard")

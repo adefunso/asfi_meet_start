@@ -1,6 +1,7 @@
 const isAdmin = require("../utils/isAdmin");
 
 
+
 const SCholarManagePosters = async (req, res) => {
   if(req.cookies.posterUser){
     const useremail = req.user.email 

@@ -1,5 +1,5 @@
 const { config } = require("dotenv")
-
+config()
 
 const NoLogInNeeded = async (req,res, next) =>{
 

@@ -1,3 +1,6 @@
+const { config } = require("dotenv")
+config()
+
 const loggedIn = async (req,res, next) =>{
     if(req.cookies.posterUser){
         await fetch(`${process.env.ASFISCHOLAR_ENDPOINT}/external/api/validateLogin`,{

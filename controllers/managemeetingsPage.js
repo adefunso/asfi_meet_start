@@ -1,3 +1,5 @@
+const { config } = require("dotenv")
+config()
 const getAllMeetingsForAdmin = require("./asfi_meet_v9/getAllMeetingsForAdmin");
 const getPublicMeetings = require("./asfi_meet_v9/getPublicMeetings");
 const isAdmin = require("./utils/isAdmin");

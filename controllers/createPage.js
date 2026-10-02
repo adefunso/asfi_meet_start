@@ -1,4 +1,5 @@
 const { config } = require("dotenv")
+config()
 const isAdmin = require("./utils/isAdmin")
 
 const CreatePage = async (req,res) =>{

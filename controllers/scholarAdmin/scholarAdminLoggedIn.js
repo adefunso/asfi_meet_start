@@ -1,3 +1,5 @@
+const { config } = require("dotenv")
+config()
 const ScholarAdmin = async (req,res, next) =>{
     const userCookie = req.params.user 
     

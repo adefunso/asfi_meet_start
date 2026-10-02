@@ -1,3 +1,5 @@
+const { config } = require("dotenv")
+config()
 const isAdmin = require("./utils/isAdmin");
 
 const managepostersPage = async (req, res) => {
