@@ -13,12 +13,12 @@ const loggedIn = async (req,res, next) =>{
                 next()
             }else{
                 console.log(data.error)
-                return res.render("signin", {meetingId:""})
+                return res.render("signin", {meetingId:"", recaptcha_site_key: process.env.RECAPTCHA_SITE_KEY || "" })
             }
 
         })
     }else{
-        return res.render("signin", {meetingId:""})
+        return res.render("signin", {meetingId:"", recaptcha_site_key: process.env.RECAPTCHA_SITE_KEY || "" })
     }
 }
 

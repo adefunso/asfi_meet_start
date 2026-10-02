@@ -1,11 +1,30 @@
 const login = async (req,res) =>{
     try{
     const {user, pass} = req.body
+    const recaptchaToken = req.body.recaptcha || req.body["g-recaptcha-response"] || ""
+
+    if(!recaptchaToken){
+        return res.json({status:"error", error:"Please complete the reCAPTCHA verification."})
+    }
+
+    function getClientIP(req) {
+        let ip = req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress;
+
+        // Clean IPv6 localhost
+        if (ip === "::1") ip = "127.0.0.1";
+
+        return ip;
+    }
 
 async function response() {
         return  await fetch(`${process.env.ASFISCHOLAR_ENDPOINT}/api/login`, {
         method:"POST",
-        body:JSON.stringify({user:user, pass:pass}),
+        body:JSON.stringify({
+            user:user,
+            pass:pass,
+            recaptcha: recaptchaToken,
+            remoteIp: getClientIP(req)
+        }),
         headers:{
             "Content-type": "application/json"
         }

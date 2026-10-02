@@ -6,6 +6,7 @@
     <title>Sign In | ASFIMeet</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="/assets/favicon_inverted.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>
         tailwind.config = {
             theme: {
@@ -21,6 +22,51 @@
             }
         }
     </script>
+    <style>
+        .msg {
+            transition: all 0.3s ease-in-out;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .btn-loading {
+            position: relative;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .btn-loading .btn-text {
+            visibility: hidden;
+        }
+
+        .btn-loading .btn-spinner {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-spinner {
+            display: none;
+        }
+
+        .btn-spinner i {
+            font-size: 20px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .g-recaptcha {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
 </head>
 <body class="bg-bg-dark min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-md bg-transparent rounded-lg shadow-[0px_40px_30px_0px_rgba(0,0,0,0.25)] p-6">
@@ -46,10 +92,16 @@
                         <i class="fa fa-eye block text-accent user-select-none text-sm  cursor-pointer" style="user-select: none;" onclick="show_pass()">show password</i>
                 </div>
                 
+                <% if(typeof recaptcha_site_key !== 'undefined' ? recaptcha_site_key : (locals.recaptcha_site_key || '')) { %>
+                <div class="g-recaptcha" data-sitekey="<%= typeof recaptcha_site_key !== 'undefined' ? recaptcha_site_key : (locals.recaptcha_site_key || '') %>" data-callback="onLoginRecaptcha" data-expired-callback="onLoginRecaptchaExpired"></div>
+                <% } %>
+
                 <div class="space-y-3 mt-2">
-                    <button type="submit" 
-                        class="w-full bg-primary text-white py-2 px-4 rounded-[25px] text-base font-medium hover:bg-opacity-90 transition">
-                        Sign In
+                    <button type="submit" id="loginBtn"
+                        <%= (typeof recaptcha_site_key !== 'undefined' ? recaptcha_site_key : (locals.recaptcha_site_key || '')) ? 'disabled' : '' %>
+                        class="w-full bg-primary text-white py-2 px-4 rounded-[25px] text-base font-medium hover:bg-opacity-90 transition disabled:opacity-60 disabled:cursor-not-allowed">
+                        <span class="btn-text">Sign In</span>
+                        <span class="btn-spinner"><i class="fas fa-spinner"></i></span>
                     </button>
                     
                     <% if(meetingId && meetingId !== ""){ %>
@@ -73,6 +125,7 @@
     </div>
       <link rel="stylesheet" href="/assets/global/css/iziToast.min.css">
   <script src="/assets/global/js/iziToast.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="/js/login.js"></script>
 </body>
 </html>

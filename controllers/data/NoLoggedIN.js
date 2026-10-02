@@ -17,7 +17,7 @@ const NoLogInNeeded = async (req,res, next) =>{
                 next()
             }else{
                 console.log(data.error)
-                return res.render("signin", {meetingId:req.params.meetingId})
+                return res.render("signin", {meetingId:req.params.meetingId, recaptcha_site_key: process.env.RECAPTCHA_SITE_KEY || "" })
             }
 
         })
@@ -73,7 +73,7 @@ const NoLogInNeeded = async (req,res, next) =>{
         }
         next()
     }else{
-        return res.render("signin", {meetingId:req.params.meeting})
+        return res.render("signin", {meetingId:req.params.meeting, recaptcha_site_key: process.env.RECAPTCHA_SITE_KEY || "" })
     }
 }
 
