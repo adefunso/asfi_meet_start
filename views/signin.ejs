@@ -92,16 +92,13 @@
                         <i class="fa fa-eye block text-accent user-select-none text-sm  cursor-pointer" style="user-select: none;" onclick="show_pass()">show password</i>
                 </div>
                 
-                <% if(typeof recaptcha_site_key !== 'undefined' ? recaptcha_site_key : (locals.recaptcha_site_key || '')) { %>
-                <div class="g-recaptcha" data-sitekey="<%= typeof recaptcha_site_key !== 'undefined' ? recaptcha_site_key : (locals.recaptcha_site_key || '') %>" data-callback="onLoginRecaptcha" data-expired-callback="onLoginRecaptchaExpired"></div>
-                <% } else{  %>
-                <input type="hidden" name="g-recaptcha-response" value="dummy">
-                no site key
-                <% } %>
+        
+                <div class="g-recaptcha" data-sitekey="6LcEcsUrAAAAACd3CAtZIO54BjvF7viwD__b0vTB" data-callback="onLoginRecaptcha" data-expired-callback="onLoginRecaptchaExpired"></div>
+               
 
                 <div class="space-y-3 mt-2">
                     <button type="submit" id="loginBtn"
-                        <%= (typeof recaptcha_site_key !== 'undefined' ? recaptcha_site_key : (locals.recaptcha_site_key || '')) ? 'disabled' : '' %>
+                        <%= "6LcEcsUrAAAAACd3CAtZIO54BjvF7viwD__b0vTB" ? 'disabled' : '' %>
                         class="w-full bg-primary text-white py-2 px-4 rounded-[25px] text-base font-medium hover:bg-opacity-90 transition disabled:opacity-60 disabled:cursor-not-allowed">
                         <span class="btn-text">Sign In</span>
                         <span class="btn-spinner"><i class="fas fa-spinner"></i></span>
