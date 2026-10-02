@@ -62,10 +62,6 @@
             to { transform: rotate(360deg); }
         }
 
-        .g-recaptcha {
-            display: flex;
-            justify-content: center;
-        }
     </style>
 </head>
 <body class="bg-bg-dark min-h-screen flex items-center justify-center p-4">
@@ -78,7 +74,7 @@
             <h2 class="text-white text-xl font-bold mt-2">Sign In to ASFIMeet</h2>
        
             
-            <form id="loginForm" class="w-full space-y-4 mt-2">
+            <form id="loginForm" class="w-full space-y-4 mt-2" data-recaptcha-site-key="<%= (typeof recaptcha_site_key !== "undefined" && recaptcha_site_key) ? recaptcha_site_key : "" %>">
                 <div class="space-y-1">
                     <label for="email" class="text-white block text-sm">Email / Username</label>
                     <input type="text" id="user" name="email" required 
@@ -93,12 +89,9 @@
                 </div>
                 
         
-                <div class="g-recaptcha" data-sitekey="6LdJ9tstAAAAAPDuyxH2E-HbSLFHRiatdy7hr4ln" data-callback="onLoginRecaptcha" data-expired-callback="onLoginRecaptchaExpired"></div>
-               
 
                 <div class="space-y-3 mt-2">
                     <button type="submit" id="loginBtn"
-                        <%= "6LdJ9tstAAAAAPDuyxH2E-HbSLFHRiatdy7hr4ln" ? 'disabled' : '' %>
                         class="w-full bg-primary text-white py-2 px-4 rounded-[25px] text-base font-medium hover:bg-opacity-90 transition disabled:opacity-60 disabled:cursor-not-allowed">
                         <span class="btn-text">Sign In</span>
                         <span class="btn-spinner"><i class="fas fa-spinner"></i></span>
@@ -125,7 +118,9 @@
     </div>
       <link rel="stylesheet" href="/assets/global/css/iziToast.min.css">
   <script src="/assets/global/js/iziToast.min.js"></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <% if (typeof recaptcha_site_key !== "undefined" && recaptcha_site_key) { %>
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=<%= recaptcha_site_key %>" async defer></script>
+    <% } %>
     <script src="/js/login.js"></script>
 </body>
 </html>

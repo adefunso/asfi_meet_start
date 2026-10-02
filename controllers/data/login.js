@@ -2,6 +2,7 @@ const login = async (req,res) =>{
     try{
     const {user, pass} = req.body
     const recaptchaToken = req.body.recaptcha || req.body["g-recaptcha-response"] || ""
+    const recaptchaAction = req.body.recaptchaAction || ""
 
     if(!recaptchaToken){
         return res.json({status:"error", error:"Please complete the reCAPTCHA verification."})
@@ -23,6 +24,7 @@ async function response() {
             user:user,
             pass:pass,
             recaptcha: recaptchaToken,
+            recaptchaAction: recaptchaAction,
             remoteIp: getClientIP(req)
         }),
         headers:{

@@ -1,52 +1,63 @@
 const form = document.getElementById("loginForm");
 const loginBtn = document.getElementById("loginBtn");
 const errorEl = document.getElementById("error");
-const recaptchaWidget = document.querySelector(".g-recaptcha");
-const recaptchaEnabled = !!recaptchaWidget;
 
-let recaptchaPassed = !recaptchaEnabled;
-
-function onLoginRecaptcha() {
-    recaptchaPassed = true;
-    if (loginBtn) loginBtn.disabled = false;
-}
-
-function onLoginRecaptchaExpired() {
-    recaptchaPassed = false;
-    if (loginBtn) loginBtn.disabled = true;
-}
+// Score-based reCAPTCHA Enterprise keys have no visible checkbox. The site key
+// is rendered onto the form and a fresh token is minted on demand with
+// grecaptcha.enterprise.execute() right before the form is submitted.
+const recaptchaSiteKey = form ? (form.dataset.recaptchaSiteKey || "") : "";
+const recaptchaEnabled = recaptchaSiteKey !== "";
+const RECAPTCHA_ACTION = "login";
 
 function setLoginLoading(isLoading) {
     if (!loginBtn) return;
     loginBtn.classList.toggle("btn-loading", isLoading);
-    loginBtn.disabled = isLoading || !recaptchaPassed;
+    loginBtn.disabled = isLoading;
+}
+
+function getRecaptchaToken() {
+    return new Promise((resolve, reject) => {
+        if (!recaptchaEnabled) return resolve("");
+
+        if (typeof grecaptcha === "undefined" || !grecaptcha.enterprise) {
+            return reject(new Error("reCAPTCHA failed to load. Please refresh and try again."));
+        }
+
+        grecaptcha.enterprise.ready(() => {
+            grecaptcha.enterprise
+                .execute(recaptchaSiteKey, { action: RECAPTCHA_ACTION })
+                .then(resolve)
+                .catch(() => reject(new Error("Unable to complete the reCAPTCHA verification.")));
+        });
+    });
 }
 
 if (form) {
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const recaptchaToken = (typeof grecaptcha !== "undefined" && recaptchaEnabled)
-            ? grecaptcha.getResponse()
-            : "";
+        setLoginLoading(true);
 
-        if (recaptchaEnabled && !recaptchaToken) {
-            recaptchaPassed = false;
-            if (loginBtn) loginBtn.disabled = true;
+        let recaptchaToken = "";
+        try {
+            recaptchaToken = await getRecaptchaToken();
+        } catch (err) {
+            const message = err.message || "Unable to complete the reCAPTCHA verification.";
             iziToast.error({
-                message: "Please complete the reCAPTCHA verification.",
+                message: message,
                 position: "topCenter"
             });
+            if (errorEl) errorEl.innerText = message;
+            setLoginLoading(false);
             return;
         }
 
         const login = {
             user: document.getElementById("user").value,
             pass: document.getElementById("pass").value,
-            recaptcha: recaptchaToken
+            recaptcha: recaptchaToken,
+            recaptchaAction: RECAPTCHA_ACTION
         };
-
-        setLoginLoading(true);
 
         fetch("/api/login", {
             method: "POST",
@@ -64,11 +75,6 @@ if (form) {
                     });
                     if (errorEl) errorEl.innerText = data.error;
 
-                    // Reset the widget so the user can try again with a fresh token.
-                    if (recaptchaEnabled && typeof grecaptcha !== "undefined") {
-                        grecaptcha.reset();
-                    }
-                    recaptchaPassed = !recaptchaEnabled;
                     setLoginLoading(false);
                 }
                 else {
