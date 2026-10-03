@@ -2,12 +2,22 @@ const form = document.getElementById("loginForm");
 const loginBtn = document.getElementById("loginBtn");
 const errorEl = document.getElementById("error");
 
-// Score-based reCAPTCHA Enterprise keys have no visible checkbox. The site key
-// is rendered onto the form and a fresh token is minted on demand with
-// grecaptcha.enterprise.execute() right before the form is submitted.
-const recaptchaSiteKey = form ? (form.dataset.recaptchaSiteKey || "") : "";
-const recaptchaEnabled = recaptchaSiteKey !== "";
-const RECAPTCHA_ACTION = "login";
+// Cloudflare Turnstile renders a widget onto the form. The response token is
+// read from the hidden cf-turnstile-response field when the form is submitted.
+const turnstileSiteKey = form ? (form.dataset.turnstileSiteKey || "") : "";
+const turnstileEnabled = turnstileSiteKey !== "";
+
+let turnstilePassed = false;
+
+function onLoginTurnstile() {
+    turnstilePassed = true;
+    if (loginBtn) loginBtn.disabled = false;
+}
+
+function onLoginTurnstileExpired() {
+    turnstilePassed = false;
+    if (loginBtn) loginBtn.disabled = true;
+}
 
 function setLoginLoading(isLoading) {
     if (!loginBtn) return;
@@ -15,21 +25,9 @@ function setLoginLoading(isLoading) {
     loginBtn.disabled = isLoading;
 }
 
-function getRecaptchaToken() {
-    return new Promise((resolve, reject) => {
-        if (!recaptchaEnabled) return resolve("");
-
-        if (typeof grecaptcha === "undefined" || !grecaptcha.enterprise) {
-            return reject(new Error("reCAPTCHA failed to load. Please refresh and try again."));
-        }
-
-        grecaptcha.enterprise.ready(() => {
-            grecaptcha.enterprise
-                .execute(recaptchaSiteKey, { action: RECAPTCHA_ACTION })
-                .then(resolve)
-                .catch(() => reject(new Error("Unable to complete the reCAPTCHA verification.")));
-        });
-    });
+function getTurnstileToken() {
+    const field = document.querySelector('input[name="cf-turnstile-response"]');
+    return field ? field.value : "";
 }
 
 if (form) {
@@ -38,11 +36,9 @@ if (form) {
 
         setLoginLoading(true);
 
-        let recaptchaToken = "";
-        try {
-            recaptchaToken = await getRecaptchaToken();
-        } catch (err) {
-            const message = err.message || "Unable to complete the reCAPTCHA verification.";
+        const turnstileToken = getTurnstileToken();
+        if (turnstileEnabled && !turnstileToken) {
+            const message = "Please complete the Turnstile verification.";
             iziToast.error({
                 message: message,
                 position: "topCenter"
@@ -55,8 +51,7 @@ if (form) {
         const login = {
             user: document.getElementById("user").value,
             pass: document.getElementById("pass").value,
-            recaptcha: recaptchaToken,
-            recaptchaAction: RECAPTCHA_ACTION
+            turnstile_token: turnstileToken
         };
 
         fetch("/api/login", {

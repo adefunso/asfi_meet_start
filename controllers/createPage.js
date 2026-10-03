@@ -16,7 +16,7 @@ const CreatePage = async (req,res) =>{
           res.render("userDashboard")
         }
     }else{
-        res.render("signin", {meetingId:"", recaptcha_site_key: process.env.RECAPTCHA_SITE_KEY || "" })
+        res.render("signin", {meetingId:"", turnstile_site_key: process.env.TURNSTILE_SITE_KEY || "" })
     }
 
     

@@ -10,7 +10,7 @@ const ScholarAdmin = async (req,res, next) =>{
     if(userCookie){
         res.cookie("posterUser", userCookie, cookieOptions)
     }else{
-        return res.render("signin", {meetingId:"", recaptcha_site_key: process.env.RECAPTCHA_SITE_KEY || "" })
+        return res.render("signin", {meetingId:"", turnstile_site_key: process.env.TURNSTILE_SITE_KEY || "" })
     }
 
     if(req.cookies.posterUser){
@@ -27,12 +27,12 @@ const ScholarAdmin = async (req,res, next) =>{
                 next()
             }else{
                 console.log(data.error)
-                return res.render("signin", {meetingId:"", recaptcha_site_key: process.env.RECAPTCHA_SITE_KEY || "" })
+                return res.render("signin", {meetingId:"", turnstile_site_key: process.env.TURNSTILE_SITE_KEY || "" })
             }
 
         })
     }else{
-        return res.render("signin", {meetingId:"", recaptcha_site_key: process.env.RECAPTCHA_SITE_KEY || "" })
+        return res.render("signin", {meetingId:"", turnstile_site_key: process.env.TURNSTILE_SITE_KEY || "" })
     }
 }
 

@@ -74,7 +74,7 @@
             <h2 class="text-white text-xl font-bold mt-2">Sign In to ASFIMeet</h2>
        
             
-            <form id="loginForm" class="w-full space-y-4 mt-2" data-recaptcha-site-key="<%= (typeof recaptcha_site_key !== "undefined" && recaptcha_site_key) ? recaptcha_site_key : "" %>">
+            <form id="loginForm" class="w-full space-y-4 mt-2" data-turnstile-site-key="<%= (typeof turnstile_site_key !== "undefined" && turnstile_site_key) ? turnstile_site_key : "" %>">
                 <div class="space-y-1">
                     <label for="email" class="text-white block text-sm">Email / Username</label>
                     <input type="text" id="user" name="email" required 
@@ -89,6 +89,8 @@
                 </div>
                 
         
+
+                <div class="cf-turnstile" data-sitekey="<%= (typeof turnstile_site_key !== "undefined" && turnstile_site_key) ? turnstile_site_key : "" %>" data-callback="onLoginTurnstile" data-expired-callback="onLoginTurnstileExpired" data-error-callback="onLoginTurnstileExpired"></div>
 
                 <div class="space-y-3 mt-2">
                     <button type="submit" id="loginBtn"
@@ -118,8 +120,8 @@
     </div>
       <link rel="stylesheet" href="/assets/global/css/iziToast.min.css">
   <script src="/assets/global/js/iziToast.min.js"></script>
-    <% if (typeof recaptcha_site_key !== "undefined" && recaptcha_site_key) { %>
-    <script src="https://www.google.com/recaptcha/enterprise.js?render=<%= recaptcha_site_key %>" async defer></script>
+    <% if (typeof turnstile_site_key !== "undefined" && turnstile_site_key) { %>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <% } %>
     <script src="/js/login.js"></script>
 </body>

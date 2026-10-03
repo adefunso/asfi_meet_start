@@ -1,11 +1,10 @@
 const login = async (req,res) =>{
     try{
     const {user, pass} = req.body
-    const recaptchaToken = req.body.recaptcha || req.body["g-recaptcha-response"] || ""
-    const recaptchaAction = req.body.recaptchaAction || ""
+    const turnstileToken = req.body.turnstile_token || req.body.recaptcha || req.body["cf-turnstile-response"] || req.body["g-recaptcha-response"] || ""
 
-    if(!recaptchaToken){
-        return res.json({status:"error", error:"Please complete the reCAPTCHA verification."})
+    if(!turnstileToken){
+        return res.json({status:"error", error:"Please complete the Turnstile verification."})
     }
 
     function getClientIP(req) {
@@ -23,8 +22,7 @@ async function response() {
         body:JSON.stringify({
             user:user,
             pass:pass,
-            recaptcha: recaptchaToken,
-            recaptchaAction: recaptchaAction,
+            turnstile_token: turnstileToken,
             remoteIp: getClientIP(req)
         }),
         headers:{
