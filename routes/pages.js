@@ -53,6 +53,8 @@ const GuestPage = require("../controllers/asfi_meet_v9/admin/guestsPage")
 const validateGuest = require("../controllers/asfi_meet_v9/guests/validateGuest")
 const testMeeting = require("../controllers/asfi_meet_v9/testMeeting")
 const upload = multer(); // No dest = keep files in memory
+const { createOriginGuard, getAllowedOrigins } = require("../middlewares/originGuard");
+const { authLimiter, writeLimiter, uploadLimiter } = require("../middlewares/rateLimit");
 
 router.use(express.json())
 router.use(bodyParser.json());
@@ -60,13 +62,9 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(express.urlencoded({ extended: true }));
 
 
-router.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    next();
-}); 
+// CORS headers are issued once in app.js for the allowlisted origins only.
+// Anything coming from another origin is refused before it reaches a route.
+router.use(createOriginGuard(getAllowedOrigins()));
 router.get("/dashboard", loggedIn, dashboard)
 router.get("/", async(req,res) =>{
     res.render("home")
@@ -79,7 +77,7 @@ router.get("/documentation", async(req,res) =>{
 })
 router.get("/register", signupPage)
 router.get("/login", loginPage)
-router.post("/api/login", login)
+router.post("/api/login", authLimiter, login)
 router.get("/meetings", loggedIn, dashboard);
 
 router.get("/recordings", loggedIn, recordingsPage);
@@ -87,7 +85,7 @@ router.get("/posteroverview", loggedIn, posterOverVIew);
 router.get("/manageposters", loggedIn, managepostersPage)
 router.get("/allChannels", channels)
  
-router.post("/createMeeting", loggedIn, createMeeting)
+router.post("/createMeeting", writeLimiter, loggedIn, createMeeting)
 router.get("/v9/m/:channel", meetingLinks)
 
 router.get("/mostLiked", getMostLiked)
@@ -108,8 +106,8 @@ router.get("/call/:meeting", startASFIScholarCall)
 router.post("/createAdmin", loggedIn, createAdmin)
 router.get("/createAdmin", loggedIn, manageAdminsPage)
 router.post("/deleteAdmin", loggedIn, deleteAdmin)
-router.post("/asfiMeetFileUpload", asfiMeetFileUpload)
-router.post("/uploadRecording", uploadRecordings)
+router.post("/asfiMeetFileUpload", uploadLimiter, asfiMeetFileUpload)
+router.post("/uploadRecording", uploadLimiter, uploadRecordings)
 router.get("/r/download/:meetingId", downloadAsMp4)
 router.get("/logout",(req,res) => {
   
@@ -127,7 +125,7 @@ router.post("/meetings/start", loggedIn, startMeeting)
 router.post("/meetings/reset", loggedIn, resetMeeting)
 router.post("/meetings/test", loggedIn, testMeeting)
 
-router.post("/pre-reg", NoLogInNeeded, upload.none(), preRegistration)
+router.post("/pre-reg", writeLimiter, NoLogInNeeded, upload.none(), preRegistration)
 router.get("/api/participants/:meetingId", loggedIn, getParticipants)
 router.delete("/api/participants/delete/:participantId",  loggedIn, deleteParticipant)
 router.get("/manage/pre-reg/:meetingId", csrfProtection, loggedIn, adminPreReg)
@@ -137,9 +135,9 @@ router.get("/preview/pre-reg/:meetingId", csrfProtection, loggedIn, previewRegFo
 // Guests 
 router.get("/api/guests/:meetingId", loggedIn, getAllGuests)
 router.delete("/api/guests/:id", loggedIn, deleteGuests)
-router.post("/api/guests", NoLogInNeeded, createGuest)
+router.post("/api/guests", writeLimiter, NoLogInNeeded, createGuest)
 router.get("/manage/guests/:meetingId", loggedIn, GuestPage)
-router.post("/api/guests/login/user", upload.none(), validateGuest)
+router.post("/api/guests/login/user", authLimiter, upload.none(), validateGuest)
 
 
 router.get("/participants/:meetingId", loggedIn, (req,res) => {

@@ -1,40 +1,55 @@
-
 const { config } = require('dotenv');
-const sql = require('mysql2'); // Use require instead of import
+const mysql = require('mysql2');
+const { logError, logInfo } = require('../utils/logger');
 
 config();
 
-const db = sql.createConnection({
+// A pool is used instead of a single connection: an idle connection that the
+// server closes used to leave every later query throwing
+// "Can't add new command when connection is in closed state".
+const db = mysql.createPool({
     host: process.env.DATA_HOST,
     user: process.env.DATA_USER,
     password: process.env.DATA_PASSWORD,
-    database: process.env.DATA_MAIN_NAME
+    database: process.env.DATA_MAIN_NAME,
+    waitForConnections: true,
+    connectionLimit: Number(process.env.DATA_CONNECTION_LIMIT) || 10,
+    queueLimit: 0,
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 10000
 });
 
-// Function to check database connection and return errors
+// An idle-connection error must be logged, never left unhandled (which crashes)
+db.on("error", (error) => {
+    logError("MySQL pool error", error);
+});
+
 function connectToDatabase() {
-    db.connect((err) => {
+    db.getConnection((err, connection) => {
         if (err) {
-            console.error('Error connecting to the database:', err);
-            return err; // Return the error
+            logError("Error connecting to the database", err);
+            return err;
         }
-        console.log('Connected to the database.');
-        return null; // No error, connection successful
+
+        connection.release();
+        logInfo("Connected to the database (pool).");
+        return null;
     });
 }
-connectToDatabase()
-// Function to handle query errors
+
+connectToDatabase();
+
 function executeQuery(query, params, callback) {
     db.query(query, params, (err, results) => {
         if (err) {
-            console.error('Error executing query:', err);
-            return callback(err, null); // Return error
+            logError("Error executing query", err);
+            return callback(err, null);
         }
-        callback(null, results); // Return results on success
+        callback(null, results);
     });
 }
 
-module.exports = { 
+module.exports = {
     db,
     connectToDatabase,
     executeQuery

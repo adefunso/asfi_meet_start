@@ -1,4 +1,5 @@
 const { db } = require("../../routes/db.config");
+const { logError } = require("../../utils/logger");
 
 const meetingExists = (meetingId) => { 
     if(meetingId === undefined || meetingId === null) {
@@ -7,10 +8,10 @@ const meetingExists = (meetingId) => {
     return new Promise((resolve, reject) => {
         db.query("SELECT * FROM channels WHERE channel = ? OR id = ?", [meetingId, meetingId], (err, result) => {
             if (err) {
-                console.error("Error executing query:", err);
+                logError("Error looking up meeting", err);
                 reject(err);
             } else {
-                if (result[0]) {
+                if (result && result[0]) {
                     resolve(result[0]); // User is an admin
                 } else {
                     resolve(false); // User is not an admin
