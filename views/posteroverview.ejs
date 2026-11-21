@@ -3,32 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ASFIMeet | Poster Management Dashboard</title>
+  <title>ASFIMeet | Posters Leader boards</title>
+
   <!-- SEO Meta Tags -->
   <meta name="description" content="ASFIMeet is a secure and high-quality video conferencing platform from ASFI. Host meetings, collaborate, and connect with teams effortlessly.">
   <meta name="keywords" content="video conferencing, online meetings, virtual meetings, remote work, team collaboration">
   <meta name="author" content="Weperch Technologies Limited">
-  
+
   <!-- Open Graph (For Social Media Sharing) -->
   <meta property="og:title" content="ASFIMeet - Seamless Video Conferencing">
   <meta property="og:description" content="Host secure and high-quality video meetings with ASFIMeet. Collaborate with your team anytime, anywhere.">
   <meta property="og:image" content="https://res.cloudinary.com/diml8ljwa/image/upload/c_thumb,w_200,g_face/v1743261283/Screenshot_147_mjjyce.png">
   <meta property="og:url" content="https://asfischolar.net">
   <meta property="og:type" content="website">
-  
+
   <!-- Twitter Card (For Twitter Sharing) -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="ASFIMeet - Seamless Video Conferencing">
   <meta name="twitter:description" content="Experience high-quality, secure video meetings with ASFIMeet. Connect, collaborate, and stay productive.">
   <meta name="twitter:image" content="https://res.cloudinary.com/diml8ljwa/image/upload/c_thumb,w_200,g_face/v1743261283/Screenshot_147_mjjyce.png">
-  
- <!-- Favicon -->
- <link rel="icon" href="/assets/favicon_inverted.png" type="image/x-icon">
-  
+
+  <!-- Favicon -->
+  <link rel="icon" href="/assets/favicon_inverted.png" type="image/x-icon">
+
   <!-- Canonical URL -->
   <link rel="canonical" href="https://asfischolar.net">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  
+
   <style>
     * {
       margin: 0;
@@ -101,25 +102,93 @@
     }
     header {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-end;
+      gap: 16px;
       background-color: #333;
       color: white;
       padding: 20px;
-      border-radius: 18px;
+      border-radius: 12px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .header-sub {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #b9b9c3;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 10px;
+    }
+    .filters label {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12px;
+      color: #b9b9c3;
+    }
+    .filters select {
+      min-width: 210px;
+      padding: 9px 10px;
+      border-radius: 8px;
+      border: 1px solid #555;
+      background-color: #262626;
+      color: #f2f2f2;
+      font-size: 13px;
+    }
+    .apply-btn {
+      padding: 9px 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: purple;
+      color: white;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .reset-link {
+      padding: 9px 4px;
+      color: #cfcfd6;
+      font-size: 13px;
+      text-decoration: underline;
+    }
+
+    .alert {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    .alert--error {
+      background: #3b1f22;
+      color: #f8b4b4;
+      border: 1px solid #6b2b31;
+    }
+
+    .board {
+      margin-top: 20px;
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .board-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .board-head span {
+      font-size: 12px;
+      color: #9aa0a6;
     }
     .poster-grid{
       overflow-x: auto;
-      margin-bottom: 40px;
-    }
-    .poster-lists {
-      margin-top: 40px;
-      background-color: #333;
-      color: white;
-      padding: 20px;
-      border-radius: 18px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
     table {
       width: 100%;
@@ -127,24 +196,62 @@
     }
     thead td {
       font-weight: bold;
-      background: #444;
-      padding: 10px;
+      background: #141414;
+      padding: 12px 10px;
       color: rgb(190, 190, 190);
+      font-size: 13px;
+      text-align: left;
+      white-space: nowrap;
     }
     tbody td {
-      padding: 20px;
-      border-bottom: 1px solid #ddd;
+      padding: 14px 10px;
+      border-bottom: 1px solid #4a4a4a;
+      font-size: 14px;
+      vertical-align: middle;
     }
-    tbody td a {
+    tbody tr:hover {
+      background-color: #3a3a3a;
+    }
+    .poster-cell {
       display: flex;
-      justify-content: center;
-      width: 120px;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 220px;
+    }
+    .poster-title {
+      font-weight: 600;
+    }
+    .poster-id {
+      font-size: 11px;
+      color: #9aa0a6;
+    }
+    .rank {
+      font-weight: 700;
+      color: #c9b3e6;
+      width: 44px;
+    }
+    .muted {
+      color: #9aa0a6;
+    }
+    .empty {
+      text-align: center;
+      color: #b9b9c3;
+      padding: 28px 10px !important;
+    }
+    .view-poster-btn {
+      display: inline-block;
       text-decoration: none;
       background-color: purple;
       color: white;
-      padding: 10px;
+      padding: 9px 12px;
       border-radius: 8px;
+      font-size: 13px;
+      white-space: nowrap;
     }
+    .view-poster-btn:hover {
+      background-color: #6b1f8f;
+    }
+
     @media (max-width: 768px) {
       .sidebar {
         transform: translateX(-100%);
@@ -161,121 +268,114 @@
         margin-left: 0;
         margin-top: 70px;
       }
+      .filters select {
+        min-width: 150px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="menu-icon" id="menu-icon" onclick="toggleSidebar()">☰</div>
-  <div class="sidebar" id="sidebar">
-    <h2>Posters Manager</h2>
-    <ul>
-      <li><a href="/" id="all-meetings">Back to Meetings</a></li>
-      <li><a href="/manageposters" id="all-meetings">Manage Posters</a></li>
-      <li><a href="https://posters.asfischolar.com/sessionDashboard">Posters</a></li>
-      <li><a href="#">Posters Overview</a></li>
-      <li><a href="https://posters.asfischolar.com/create/secret" id="all-meetings">Generate Private Key</a></li>
-       <li><a href="/recordings">Meeting Recordings</a></li>
-       <li> <a href="/createAdmin">Add Admin</a></li>
-      <!-- <li><a href="#" id="upcoming-meetings">Upcoming Meetings</a></li>
-      <li><a href="#" id="past-meetings">Past Meetings</a></li> -->
-      <li><a href="/">Create New Meeting</a></li>
-     
-    </ul>
-  </div>
+  <%- include('partials/dashboardSidebar.ejs', { sidebarRole: "admin" }) %>
 
   <div class="main-content">
     <header>
-      <h1>Posters Overview</h1>
-      <div class="stats">
-        <div>Total Posters: <span id="total-posters">0</span></div>
+      <div>
+        <h1>Posters Leader boards</h1>
+        <p class="header-sub">
+          <% if (meeting) { %>
+            Top <%= boardLimit %> posters in <%= selectedMeetingName || meeting %>
+          <% } else { %>
+            Top <%= boardLimit %> posters across every meeting
+          <% } %>
+        </p>
       </div>
+
+      <form class="filters" method="GET" action="/posteroverview">
+        <label>
+          Meeting
+          <select name="meeting">
+            <option value="">All meetings</option>
+            <% meetings.forEach(function (option) { %>
+              <option value="<%= option.meeting %>" <%= meeting === option.meeting ? "selected" : "" %>><%= option.name %> (<%= option.total %>)</option>
+            <% }); %>
+          </select>
+        </label>
+        <button type="submit" class="apply-btn">Apply</button>
+        <% if (meeting) { %>
+          <a href="/posteroverview" class="reset-link">Reset</a>
+        <% } %>
+      </form>
     </header>
 
-    <!-- Poster list section -->
-    <section class="poster-lists" id="poster-lists">
-      <h2>Most Rated Posters</h2>
-      <div class="poster-grid" id="most-rated">
-        <!-- Posters will be dynamically added here -->
-        <table>
-          <thead>
-            <td>Poster Title</td>
-            <td>Presenter Name</td>
-            <td>Total Rating</td>
-            <td>Actions</td>
-          </thead>
+    <% if (loadError) { %>
+      <div class="alert alert--error"><%= loadError %></div>
+    <% } %>
 
-          <tbody id="most-ratedList">
-            
-          </tbody>
-         </table>
-      </div>
+    <%
+      const boardsConfig = [
+        { key: "liked", title: "Most Liked Posters", metricLabel: "Likes", value: function (poster) { return Number(poster.like_count).toLocaleString(); } },
+        { key: "rated", title: "Most Rated Posters", metricLabel: "Total Rating", value: function (poster) { return Number(poster.total_rating).toFixed(1) + " (" + Number(poster.rating_count).toLocaleString() + " rating" + (Number(poster.rating_count) === 1 ? "" : "s") + ")"; } },
+        { key: "viewed", title: "Most Viewed Posters", metricLabel: "Views", value: function (poster) { return Number(poster.view_count).toLocaleString(); } },
+        { key: "disliked", title: "Most Disliked Posters", metricLabel: "Dislikes", value: function (poster) { return Number(poster.dislike_count).toLocaleString(); } }
+      ];
+    %>
 
-      <h2>Most Viewed Posters</h2>
-      <div class="poster-grid" id="most-viewed">
-        <!-- Posters will be dynamically added here -->
-        <table>
-          <thead>
-            <td>Poster Title</td>
-            <td>Presenter Name</td>
-            <td>Total Views</td>
-            <td>Actions</td>
-          </thead>
+    <% boardsConfig.forEach(function (config) { %>
+      <% const rows = Array.isArray(boards[config.key]) ? boards[config.key] : []; %>
+      <section class="board">
+        <div class="board-head">
+          <h2><%= config.title %></h2>
+          <span><%= rows.length %> poster(s)<%= meeting ? " · " + (selectedMeetingName || meeting) : "" %></span>
+        </div>
 
-          <tbody id="most-viewedList">
-            
-          </tbody>
-         </table>
-      </div>
+        <div class="poster-grid">
+          <table>
+            <thead>
+              <tr>
+                <td>Rank</td>
+                <td>Poster</td>
+                <td>Presenter</td>
+                <td>Meeting</td>
+                <td><%= config.metricLabel %></td>
+                <td>Actions</td>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (rows.length === 0) { %>
+                <tr>
+                  <td colspan="6" class="empty">No poster has any <%= config.metricLabel.toLowerCase() %> yet<%= meeting ? " for this meeting" : "" %>.</td>
+                </tr>
+              <% } %>
 
-      <h2>Most Liked Posters</h2>
-      <div class="poster-grid" id="most-liked">
-        <!-- Posters will be dynamically added here -->
-        <table>
-          <thead>
-            <td>Poster Title</td>
-            <td>Presenter Name</td>
-            <td>Total Likes</td>
-            <td>Actions</td>
-          </thead>
-
-          <tbody id="most-likedList">
-            
-          </tbody>
-         </table>
-      </div>
-
-      
-
-      <h2>Most Disliked Posters</h2>
-      <div class="poster-grid" id="most-disliked">
-        <!-- Posters will be dynamically added here -->
-        <table>
-          <thead>
-            <td>Poster Title</td>
-            <td>Presenter Name</td>
-            <td>Total Dislikes</td>
-            <td>Actions</td>
-          </thead>
-
-          <tbody id="most-dislikedList">
-            
-          </tbody>
-         </table>
-      </div>
-    </section>
-    
-
-   
+              <% rows.forEach(function (poster, index) { %>
+                <tr>
+                  <td class="rank">#<%= index + 1 %></td>
+                  <td>
+                    <div class="poster-cell">
+                      <span class="poster-title"><%= poster.poster_deck_title %></span>
+                      <span class="poster-id"><%= poster.poster_deck_id %></span>
+                    </div>
+                  </td>
+                  <td><%= poster.poster_deck_owner %></td>
+                  <td><%= poster.meeting_name || "—" %></td>
+                  <td><%= config.value(poster) %></td>
+                  <td>
+                    <a class="view-poster-btn" href="<%= postersBase %>/event/poster/<%= encodeURIComponent(poster.poster_deck_id) %>?from_admin=true" target="_blank" rel="noopener noreferrer">View Poster</a>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    <% }); %>
   </div>
+
   <script>
     function toggleSidebar() {
-      
       document.getElementById("sidebar").classList.toggle("show");
       document.getElementById("menu-icon").classList.toggle("slide");
     }
   </script>
-  <script type="module" src="/js/getPosterOverview.js"></script>
-
-  
 </body>
 </html>

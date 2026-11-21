@@ -142,6 +142,16 @@ const managepostersPage = async (req, res) => {
       ? overview.pagination
       : { page: 1, limit: PAGE_SIZE, total: 0, totalPages: 1, hasPrevious: false, hasNext: false }
 
+    const notice = req.query.notice
+      ? { text: String(req.query.notice), kind: req.query.kind === "error" ? "error" : "success" }
+      : null
+
+    // Actions redirect back here, so keep the filters the admin was looking at
+    const returnQuery = new URLSearchParams()
+    if (filters.meeting) returnQuery.set("meeting", filters.meeting)
+    returnQuery.set("sort", filters.sort)
+    returnQuery.set("page", String(pagination.page))
+
     return res.render("manageposters", {
       stats,
       meetings,
@@ -150,6 +160,8 @@ const managepostersPage = async (req, res) => {
       filters,
       pageLinks: buildPageLinks(pagination.page, pagination.totalPages),
       postersBase: postersBaseUrl(),
+      returnTo: `/manageposters?${returnQuery.toString()}`,
+      notice,
       loadError
     })
   } catch (error) {

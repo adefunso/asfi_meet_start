@@ -1,11 +1,22 @@
 <nav class="navbar">
+    <style>
+        .nav-moved-note {
+            align-self: center;
+            padding: 5px 10px;
+            border: 1px dashed #8b5cf6;
+            border-radius: 999px;
+            font-size: 12px;
+            color: #cbb6f2;
+        }
+    </style>
     <span class="menu-btn" onclick="toggleMenu()">☰</span>
     <div class="logo"><img src="/assets/logo_inverted.png" alt=""></div>
     <div class="nav-links">
     <a href="/">Dashboard</a>
     <a href="/manageposters">Manage Posters</a>
-    <a href="/posteroverview">Posters Overview</a>
-    <a href="https://posters.asfischolar.com/create/secret">Generate Private Key</a>
+    <a href="/posteroverview">Posters Leader boards</a>
+    <a href="/manageposterids">Manage Poster IDs</a>
+    <span class="nav-moved-note" title="Generate Private Key moved here">Generate Private Key moved to <a href="/manageposterids" style="color:#fff;text-decoration:underline;">Manage Poster IDs</a></span>
     <a href="/recordings">Recordings</a>
     <a href="/createAdmin">Add Admin</a>
     </div>

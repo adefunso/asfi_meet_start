@@ -1,0 +1,307 @@
+<%
+  // Role-aware dashboard sidebar shared by every signed-in page.
+  // Pass `sidebarRole: "admin"` from an admin-only controller; anything else
+  // (including no value) renders the regular user menu with no admin links.
+  const currentSidebarRole = typeof locals.sidebarRole === "string" ? locals.sidebarRole : "user";
+  const isAdminNav = currentSidebarRole === "admin";
+%>
+<style>
+  :root {
+    --asfi-sidebar-width: 250px;
+  }
+  .app-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1200;
+    display: flex;
+    flex-direction: column;
+    width: var(--asfi-sidebar-width);
+    padding: 20px 18px;
+    overflow-y: auto;
+    background: #0f0f0f;
+    color: #ddd;
+    text-align: left;
+    transition: transform 0.3s ease-in-out;
+  }
+  .app-sidebar__logo {
+    display: flex;
+    justify-content: center;
+    padding: 6px 0 16px;
+  }
+  .app-sidebar__logo img {
+    max-width: 160px;
+    height: auto;
+  }
+  .app-sidebar__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .app-sidebar__label {
+    margin: 16px 10px 6px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #7f7f8a;
+  }
+  .app-sidebar__nav a {
+    display: block;
+    padding: 11px 12px;
+    border-radius: 10px;
+    color: #ddd;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background-color 0.25s, color 0.25s;
+  }
+  .app-sidebar__nav a:hover {
+    background: #4b345e;
+    color: #fff;
+  }
+  .app-sidebar__nav a.is-active {
+    background: purple;
+    color: #fff;
+    font-weight: 600;
+  }
+  .app-sidebar__footer {
+    margin-top: auto;
+    padding-top: 24px;
+  }
+  .app-sidebar__signout {
+    display: block;
+    padding: 11px;
+    border-radius: 10px;
+    background: purple;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    text-decoration: none;
+  }
+  .app-sidebar__signout:hover {
+    background: #6b1f8f;
+  }
+  .app-menu-btn {
+    display: none;
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 1300;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 10px;
+    background: purple;
+    color: #fff;
+    font-size: 20px;
+    line-height: 1.2;
+    cursor: pointer;
+  }
+  .app-sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  .app-sidebar__nav a.is-moved {
+    border: 1px dashed #8b5cf6;
+  }
+  .app-sidebar__walkthrough {
+    margin-top: 14px;
+    padding: 12px;
+    border: 1px solid #8b5cf6;
+    border-radius: 12px;
+    background: rgba(139, 92, 246, 0.14);
+    text-align: left;
+  }
+  .app-sidebar__walkthrough[hidden] {
+    display: none;
+  }
+  .app-sidebar__walkthrough .wt-tag {
+    display: inline-block;
+    margin-bottom: 6px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #8b5cf6;
+    color: #fff;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .app-sidebar__walkthrough .wt-title {
+    margin: 0 0 4px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .app-sidebar__walkthrough .wt-text {
+    margin: 0 0 10px;
+    color: #c7c4d4;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .app-sidebar__walkthrough .wt-cta,
+  .app-sidebar__nav .app-sidebar__walkthrough .wt-cta {
+    display: block;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: #8b5cf6;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+  }
+  .app-sidebar__walkthrough .wt-cta:hover {
+    background: #7c4de3;
+  }
+  .app-sidebar__walkthrough .wt-dismiss {
+    display: block;
+    width: 100%;
+    margin-top: 6px;
+    padding: 4px;
+    border: none;
+    background: none;
+    color: #a3a0ae;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .app-sidebar__walkthrough .wt-dismiss:hover {
+    color: #fff;
+  }
+
+  /* Keep page content clear of the fixed sidebar */
+  .app-sidebar ~ .container,
+  .app-sidebar ~ .main-content {
+    margin-left: calc(var(--asfi-sidebar-width) + 20px);
+  }
+  .app-sidebar ~ .container {
+    padding-top: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  @media (max-width: 900px) {
+    .app-sidebar {
+      transform: translateX(-100%);
+    }
+    .app-sidebar.is-open {
+      transform: translateX(0);
+    }
+    .app-menu-btn {
+      display: block;
+    }
+    .app-sidebar-overlay.is-open {
+      display: block;
+    }
+    .app-sidebar ~ .container,
+    .app-sidebar ~ .main-content {
+      margin-left: 0;
+      margin-top: 70px;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+  }
+</style>
+
+<button type="button" class="app-menu-btn" id="app-menu-btn" aria-label="Open navigation" aria-expanded="false">☰</button>
+<div class="app-sidebar-overlay" id="app-sidebar-overlay"></div>
+
+<aside class="app-sidebar" id="app-sidebar" aria-label="Site navigation">
+  <a class="app-sidebar__logo" href="/dashboard">
+    <img src="/assets/logo_inverted.png" alt="ASFIMeet">
+  </a>
+
+  <nav class="app-sidebar__nav">
+    <p class="app-sidebar__label">Meetings</p>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/meetings">Manage Meetings</a>
+
+    <% if (isAdminNav) { %>
+      <p class="app-sidebar__label">Admin</p>
+      <a href="/manageposters">Manage Posters</a>
+      <a href="/posteroverview">Posters Leader boards</a>
+      <a href="/manageposterids" class="is-moved">Manage Poster IDs</a>
+      <div class="app-sidebar__walkthrough" id="posterid-walkthrough" data-key="asfi.posterIdsWalkthrough" hidden>
+        <span class="wt-tag">Moved</span>
+        <p class="wt-title">Generate Private Key now lives on Manage Poster IDs</p>
+        <p class="wt-text">Step 1 &middot; open Manage Poster IDs.<br>Step 2 &middot; choose how many IDs to generate.<br>Step 3 &middot; press Generate.</p>
+        <a class="wt-cta" href="/manageposterids">Take me there</a>
+        <button type="button" class="wt-dismiss" data-dismiss="posterid-walkthrough">Got it, hide this</button>
+      </div>
+      <a href="/recordings">Recordings</a>
+      <a href="/createAdmin">Add Admin</a>
+    <% } %>
+
+    <p class="app-sidebar__label">ASFI</p>
+    <a href="https://asfischolar.org" target="_blank" rel="noopener noreferrer">ASFIScholar</a>
+    <a href="https://asfirj.org" target="_blank" rel="noopener noreferrer">ASFIRJ</a>
+    <a href="https://posters.asfischolar.com" target="_blank" rel="noopener noreferrer">ASFIPosters</a>
+  </nav>
+
+  <div class="app-sidebar__footer">
+    <a class="app-sidebar__signout" href="/logout">Sign Out</a>
+  </div>
+</aside>
+
+<script>
+  (function () {
+    var sidebar = document.getElementById("app-sidebar");
+    var toggle = document.getElementById("app-menu-btn");
+    var overlay = document.getElementById("app-sidebar-overlay");
+
+    function setOpen(open) {
+      if (!sidebar) return;
+      sidebar.classList.toggle("is-open", open);
+      if (overlay) overlay.classList.toggle("is-open", open);
+      if (toggle) toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+
+    if (toggle) {
+      toggle.addEventListener("click", function () {
+        setOpen(!sidebar.classList.contains("is-open"));
+      });
+    }
+    if (overlay) overlay.addEventListener("click", function () { setOpen(false); });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") setOpen(false);
+    });
+
+    // Highlight the link for the page currently open
+    var path = window.location.pathname.replace(/\/+$/, "") || "/";
+    sidebar.querySelectorAll(".app-sidebar__nav a").forEach(function (link) {
+      var href = link.getAttribute("href") || "";
+      if (href.charAt(0) !== "/") return;
+      if (href.replace(/\/+$/, "") === path) link.classList.add("is-active");
+    });
+  })();
+
+  // Walkthrough hint: poster-ID / private-key generation moved to /manageposterids
+  (function () {
+    var card = document.getElementById("posterid-walkthrough");
+    if (!card) return;
+
+    var storageKey = card.getAttribute("data-key") || "asfi.posterIdsWalkthrough";
+    var path = window.location.pathname.replace(/\/+$/, "");
+    var dismissed = false;
+    try {
+      dismissed = window.localStorage.getItem(storageKey) === "done";
+    } catch (error) {}
+
+    // Stay out of the way on the page the walkthrough points at.
+    card.hidden = dismissed || path === "/manageposterids";
+
+    var dismiss = card.querySelector("[data-dismiss]");
+    if (dismiss) {
+      dismiss.addEventListener("click", function () {
+        card.hidden = true;
+        try {
+          window.localStorage.setItem(storageKey, "done");
+        } catch (error) {}
+      });
+    }
+  })();
+</script>

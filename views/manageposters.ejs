@@ -179,6 +179,51 @@
       color: #f8b4b4;
       border: 1px solid #6b2b31;
     }
+    .alert--success {
+      background: #1e3324;
+      color: #b7f0c4;
+      border: 1px solid #2f5c3c;
+    }
+    .row-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+    .assign-form {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .assign-form select {
+      max-width: 170px;
+      padding: 7px 8px;
+      border-radius: 8px;
+      border: 1px solid #555;
+      background-color: #262626;
+      color: #f2f2f2;
+      font-size: 12px;
+    }
+    .mini-btn {
+      border: 1px solid #555;
+      background-color: #2f2f35;
+      color: #eee;
+      padding: 7px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .mini-btn:hover {
+      background-color: #3d3d45;
+    }
+    .mini-btn--danger {
+      border-color: #6b2b31;
+      background-color: #3b1f22;
+      color: #f8b4b4;
+    }
+    .mini-btn--danger:hover {
+      background-color: #4d262b;
+    }
 
     .poster-lists {
       margin-top: 20px;
@@ -449,20 +494,7 @@
   </style>
 </head>
 <body>
-  <div class="menu-icon" id="menu-icon" onclick="toggleSidebar()">☰</div>
-  <div class="sidebar" id="sidebar">
-    <h2>Posters Manager</h2>
-    <ul>
-      <li><a href="/" id="all-meetings">Back to Meetings</a></li>
-      <li><a href="/manageposters">Manage Posters</a></li>
-      <li><a href="https://posters.asfischolar.com/sessionDashboard">Posters</a></li>
-      <li><a href="/posteroverview">Posters Overview</a></li>
-      <li><a href="https://posters.asfischolar.com/create/secret" id="all-meetings">Generate Private Key</a></li>
-      <li><a href="/recordings">Meeting Recordings</a></li>
-      <li> <a href="/createAdmin">Add Admin</a></li>
-      <li><a href="/">Create New Meeting</a></li>
-    </ul>
-  </div>
+  <%- include('partials/dashboardSidebar.ejs', { sidebarRole: "admin" }) %>
 
   <div class="main-content">
     <header>
@@ -506,6 +538,10 @@
         <span class="stat-meta">All posters</span>
       </div>
     </section>
+
+    <% if (notice) { %>
+      <div class="alert alert--<%= notice.kind %>"><%= notice.text %></div>
+    <% } %>
 
     <% if (loadError) { %>
       <div class="alert alert--error"><%= loadError %></div>
@@ -589,12 +625,32 @@
                 <td><%= Number(poster.like_count).toLocaleString() %></td>
                 <td><%= poster.dateLabel %></td>
                 <td>
-                  <button
-                    type="button"
-                    class="view-poster-btn"
-                    data-view-poster
-                    data-poster-id="<%= poster.poster_deck_id %>"
-                    data-poster-title="<%= poster.poster_deck_title %>">View Poster</button>
+                  <div class="row-actions">
+                    <button
+                      type="button"
+                      class="view-poster-btn"
+                      data-view-poster
+                      data-poster-id="<%= poster.poster_deck_id %>"
+                      data-poster-title="<%= poster.poster_deck_title %>">View Poster</button>
+
+                    <form method="POST" action="/manageposters/assign-meeting" class="assign-form">
+                      <input type="hidden" name="poster_id" value="<%= poster.poster_deck_id %>">
+                      <input type="hidden" name="return_to" value="<%= returnTo %>">
+                      <select name="meeting" aria-label="Move <%= poster.poster_deck_title %> to another meeting" required>
+                        <option value="">Move to…</option>
+                        <% meetings.forEach(function (option) { %>
+                          <option value="<%= option.meeting %>"><%= option.name %></option>
+                        <% }); %>
+                      </select>
+                      <button type="submit" class="mini-btn">Assign</button>
+                    </form>
+
+                    <form method="POST" action="/manageposters/delete" onsubmit="return confirm('Delete this poster and its ratings and reactions? This cannot be undone.');">
+                      <input type="hidden" name="poster_id" value="<%= poster.poster_deck_id %>">
+                      <input type="hidden" name="return_to" value="<%= returnTo %>">
+                      <button type="submit" class="mini-btn mini-btn--danger">Delete</button>
+                    </form>
+                  </div>
                 </td>
               </tr>
             <% }); %>

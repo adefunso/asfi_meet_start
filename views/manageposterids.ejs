@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASFIMeet | Manage Poster IDs</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="ASFIMeet is a secure and high-quality video conferencing platform from ASFI. Host meetings, collaborate, and connect with teams effortlessly.">
+  <meta name="author" content="Weperch Technologies Limited">
+
+  <!-- Favicon -->
+  <link rel="icon" href="/assets/favicon_inverted.png" type="image/x-icon">
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      display: flex;
+      font-family:sans-serif;
+      background-color: #222;
+      font-size: 15px;
+    }
+    h1,h2{
+      font-size: 18px;
+    }
+    .sidebar {
+      background-color: rgba(15, 15, 15);
+      color: white;
+      width: 250px;
+      height: 100vh;
+      padding: 20px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      transition: transform 0.3s ease-in-out;
+    }
+    .sidebar.show {
+      transform: translateX(0);
+    }
+    .sidebar h2 {
+      text-align: center;
+      font-size: 15px;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar ul li {
+      margin: 20px 0;
+    }
+    .sidebar ul li a {
+      color: #ddd;
+      text-decoration: none;
+      font-size: 15px;
+      display: block;
+      padding: 10px;
+      transition: background-color 0.3s;
+    }
+    .sidebar ul li a:hover {
+      background-color: #4b345e;
+    }
+    .menu-icon {
+      display: none;
+      font-size: 18px;
+      cursor: pointer;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 1001;
+      transition: transform 0.3s ease-in-out;
+    }
+    .menu-icon.slide {
+      transform: translateX(600%);
+    }
+    .main-content {
+      margin-left: 270px;
+      padding: 20px;
+      width: 100%;
+      transition: margin-left 0.3s;
+    }
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .header-sub {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #b9b9c3;
+    }
+
+    .alert {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    .alert--error {
+      background: #3b1f22;
+      color: #f8b4b4;
+      border: 1px solid #6b2b31;
+    }
+    .alert--success {
+      background: #1e3324;
+      color: #b7f0c4;
+      border: 1px solid #2f5c3c;
+    }
+
+    .card {
+      margin-top: 20px;
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .card h2 {
+      margin-bottom: 14px;
+    }
+    .create-forms {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .create-form {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 10px;
+    }
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12px;
+      color: #b9b9c3;
+    }
+    input[type="number"],
+    input[type="text"],
+    input[type="file"],
+    select {
+      padding: 9px 10px;
+      border-radius: 8px;
+      border: 1px solid #555;
+      background-color: #262626;
+      color: #f2f2f2;
+      font-size: 13px;
+    }
+    input[type="number"] {
+      width: 120px;
+    }
+    input[type="text"] {
+      width: 260px;
+    }
+    select {
+      min-width: 170px;
+    }
+    .apply-btn {
+      padding: 9px 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: purple;
+      color: white;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .reset-link {
+      padding: 9px 4px;
+      color: #cfcfd6;
+      font-size: 13px;
+      text-decoration: underline;
+    }
+
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    .poster-grid {
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    thead td {
+      font-weight: bold;
+      background: #141414;
+      padding: 12px 10px;
+      color: rgb(190, 190, 190);
+      font-size: 13px;
+      text-align: left;
+      white-space: nowrap;
+    }
+    tbody td {
+      padding: 14px 10px;
+      border-bottom: 1px solid #4a4a4a;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+    tbody tr:hover {
+      background-color: #3a3a3a;
+    }
+    .poster-id-value {
+      font-family: monospace;
+      font-size: 13px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .badge--active {
+      background: #1e3324;
+      color: #b7f0c4;
+      border: 1px solid #2f5c3c;
+    }
+    .badge--inactive {
+      background: #3b1f22;
+      color: #f8b4b4;
+      border: 1px solid #6b2b31;
+    }
+    .badge--used {
+      background: #2b2b45;
+      color: #cfd3ff;
+      border: 1px solid #43497a;
+    }
+    .badge--unused {
+      background: #2f2f35;
+      color: #cfcfd6;
+      border: 1px solid #4a4a4a;
+    }
+    .muted {
+      color: #9aa0a6;
+    }
+    .empty {
+      text-align: center;
+      color: #b9b9c3;
+      padding: 32px 10px !important;
+    }
+    .row-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .mini-btn {
+      border: 1px solid #555;
+      background-color: #2f2f35;
+      color: #eee;
+      padding: 7px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .mini-btn:hover {
+      background-color: #3d3d45;
+    }
+    .mini-btn--danger {
+      border-color: #6b2b31;
+      background-color: #3b1f22;
+      color: #f8b4b4;
+    }
+    .mini-btn--danger:hover {
+      background-color: #4d262b;
+    }
+
+    .pagination {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .page-info {
+      font-size: 13px;
+      color: #b9b9c3;
+    }
+    .page-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+    .page-links a,
+    .page-links span.page-number {
+      min-width: 34px;
+      text-align: center;
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid #4a4a4a;
+      color: #e7e7ea;
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .page-links a:hover {
+      background-color: #444;
+    }
+    .page-links .is-current {
+      background-color: purple;
+      border-color: purple;
+      color: #fff;
+      font-weight: 600;
+    }
+    .page-links .is-disabled {
+      color: #6b6b73;
+      border-color: #3a3a3a;
+    }
+    .page-links .ellipsis {
+      border: none;
+      color: #9aa0a6;
+    }
+
+    .walkthrough {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin: 0 0 18px;
+      padding: 16px 18px;
+      border: 1px solid #8b5cf6;
+      border-radius: 12px;
+      background: rgba(139, 92, 246, 0.14);
+      color: #ece9f5;
+    }
+    .walkthrough[hidden] {
+      display: none;
+    }
+    .walkthrough__tag {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: #8b5cf6;
+      color: #fff;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .walkthrough h2 {
+      margin: 10px 0 4px;
+      color: #fff;
+      font-size: 16px;
+    }
+    .walkthrough ol {
+      margin: 8px 0 0 18px;
+    }
+    .walkthrough li {
+      margin-bottom: 6px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #d7d2e4;
+    }
+    .walkthrough li strong {
+      color: #fff;
+    }
+    .walkthrough__close {
+      align-self: center;
+      padding: 8px 14px;
+      border: 1px solid #8b5cf6;
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .walkthrough__close:hover {
+      background: #8b5cf6;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .menu-icon {
+        display: block;
+        font-size: 25px;
+        background: purple;
+        color: white;
+        padding: 6px;
+        border-radius: 8px;
+      }
+      .main-content {
+        margin-left: 0;
+        margin-top: 70px;
+      }
+      input[type="text"] {
+        width: 160px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <%- include('partials/dashboardSidebar.ejs', { sidebarRole: "admin" }) %>
+
+  <div class="main-content">
+    <header>
+      <div>
+        <h1>Manage Poster IDs</h1>
+        <p class="header-sub">Create, deactivate or delete the poster ids presenters use to upload a poster</p>
+      </div>
+      <a href="/manageposterids" class="reset-link">Refresh</a>
+    </header>
+
+    <% if (notice) { %>
+      <div class="alert alert--<%= notice.kind %>"><%= notice.text %></div>
+    <% } %>
+
+    <% if (loadError) { %>
+      <div class="alert alert--error"><%= loadError %></div>
+    <% } %>
+
+    <section class="walkthrough" id="posterid-page-walkthrough" data-key="asfi.posterIdsPageWalkthrough" hidden>
+      <div>
+        <span class="walkthrough__tag">New home</span>
+        <h2>Generate Private Key moved here</h2>
+        <ol>
+          <li><strong>Step 1</strong> &mdash; choose how many poster ids to generate, add your own, or import a CSV.</li>
+          <li><strong>Step 2</strong> &mdash; press Generate; every id is created with its private key right away.</li>
+          <li><strong>Step 3</strong> &mdash; find the id in the table below to copy it, deactivate it, reactivate it or delete it.</li>
+        </ol>
+      </div>
+      <button type="button" class="walkthrough__close" data-dismiss="posterid-page-walkthrough">Got it</button>
+    </section>
+
+    <section class="card">
+      <h2>Create poster IDs</h2>
+      <div class="create-forms">
+        <form class="create-form" method="POST" action="/manageposterids/create">
+          <input type="hidden" name="return_to" value="<%= returnTo %>">
+          <label>
+            How many to generate
+            <input type="number" name="count" min="1" max="200" value="1" required>
+          </label>
+          <button type="submit" class="apply-btn">Generate</button>
+        </form>
+
+        <form class="create-form" method="POST" action="/manageposterids/create">
+          <input type="hidden" name="return_to" value="<%= returnTo %>">
+          <label>
+            Or add your own IDs (comma or line separated)
+            <input type="text" name="ids" placeholder="ASFI-2026-CB-12345, MY-CUSTOM-ID">
+          </label>
+          <button type="submit" class="apply-btn">Add IDs</button>
+        </form>
+
+        <form class="create-form" method="POST" action="/manageposterids/import" enctype="multipart/form-data">
+          <input type="hidden" name="return_to" value="<%= returnTo %>">
+          <label>
+            Or import a CSV file (first column, one ID per row)
+            <input type="file" name="file" accept=".csv,text/csv" required>
+          </label>
+          <button type="submit" class="apply-btn">Import CSV</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <h2>Poster IDs</h2>
+
+        <form class="filters" method="GET" action="/manageposterids">
+          <label>
+            Search
+            <input type="text" name="q" value="<%= filters.q %>" placeholder="Poster ID contains…">
+          </label>
+          <label>
+            Status
+            <select name="status">
+              <option value="all" <%= filters.status === "all" ? "selected" : "" %>>All</option>
+              <option value="active" <%= filters.status === "active" ? "selected" : "" %>>Active only</option>
+              <option value="inactive" <%= filters.status === "inactive" ? "selected" : "" %>>Inactive only</option>
+              <option value="used" <%= filters.status === "used" ? "selected" : "" %>>Used</option>
+              <option value="unused" <%= filters.status === "unused" ? "selected" : "" %>>Unused</option>
+            </select>
+          </label>
+          <input type="hidden" name="page" value="1">
+          <button type="submit" class="apply-btn">Apply</button>
+          <a href="/manageposterids" class="reset-link">Reset</a>
+        </form>
+      </div>
+
+      <div class="poster-grid">
+        <table>
+          <thead>
+            <tr>
+              <td>Poster ID</td>
+              <td>Status</td>
+              <td>Used</td>
+              <td>Created</td>
+              <td>Actions</td>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% if (posterIds.length === 0) { %>
+              <tr>
+                <td colspan="5" class="empty">
+                  <%= filters.q || filters.status !== "all" ? "No poster IDs match these filters." : "No poster IDs have been created yet." %>
+                </td>
+              </tr>
+            <% } %>
+
+            <% posterIds.forEach(function (posterId) { %>
+              <tr>
+                <td class="poster-id-value"><%= posterId.poster_deck_id %></td>
+                <td>
+                  <span class="badge <%= posterId.is_active ? "badge--active" : "badge--inactive" %>"><%= posterId.is_active ? "Active" : "Inactive" %></span>
+                </td>
+                <td>
+                  <span class="badge <%= posterId.is_used ? "badge--used" : "badge--unused" %>"><%= posterId.is_used ? "Used" : "Unused" %></span>
+                  <% if (posterId.is_used) { %>
+                    <span class="muted">uploaded</span>
+                  <% } else if (Number(posterId.use_count) > 0) { %>
+                    <span class="muted">marked as redeemed</span>
+                  <% } %>
+                </td>
+                <td><%= posterId.dateLabel %></td>
+                <td>
+                  <div class="row-actions">
+                    <form method="POST" action="/manageposterids/status">
+                      <input type="hidden" name="poster_deck_id" value="<%= posterId.poster_deck_id %>">
+                      <input type="hidden" name="return_to" value="<%= returnTo %>">
+                      <input type="hidden" name="active" value="<%= posterId.is_active ? "false" : "true" %>">
+                      <button type="submit" class="mini-btn"><%= posterId.is_active ? "Deactivate" : "Activate" %></button>
+                    </form>
+
+                    <form method="POST" action="/manageposterids/delete" onsubmit="return confirm('Delete this poster ID? This cannot be undone.');">
+                      <input type="hidden" name="poster_deck_id" value="<%= posterId.poster_deck_id %>">
+                      <input type="hidden" name="return_to" value="<%= returnTo %>">
+                      <button type="submit" class="mini-btn mini-btn--danger">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+
+      <% const rangeStart = pagination.total === 0 ? 0 : ((pagination.page - 1) * pagination.limit) + 1; %>
+      <% const rangeEnd = Math.min(pagination.page * pagination.limit, pagination.total); %>
+
+      <div class="pagination">
+        <span class="page-info">
+          Showing <%= rangeStart %>–<%= rangeEnd %> of <%= Number(pagination.total).toLocaleString() %> poster id(s)
+        </span>
+
+        <div class="page-links">
+          <% if (pagination.hasPrevious) { %>
+            <a href="<%= pageUrl(pagination.page - 1) %>" rel="prev">Previous</a>
+          <% } else { %>
+            <span class="page-number is-disabled">Previous</span>
+          <% } %>
+
+          <% pageLinks.forEach(function (link) { %>
+            <% if (link === "…") { %>
+              <span class="page-number ellipsis">…</span>
+            <% } else if (link === pagination.page) { %>
+              <span class="page-number is-current"><%= link %></span>
+            <% } else { %>
+              <a href="<%= pageUrl(link) %>"><%= link %></a>
+            <% } %>
+          <% }); %>
+
+          <% if (pagination.hasNext) { %>
+            <a href="<%= pageUrl(pagination.page + 1) %>" rel="next">Next</a>
+          <% } else { %>
+            <span class="page-number is-disabled">Next</span>
+          <% } %>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("show");
+      document.getElementById("menu-icon").classList.toggle("slide");
+    }
+
+    // Walkthrough banner shown once: key generation moved onto this page.
+    (function () {
+      var card = document.getElementById("posterid-page-walkthrough");
+      if (!card) return;
+
+      var storageKey = card.getAttribute("data-key") || "asfi.posterIdsPageWalkthrough";
+      var dismissed = false;
+      try {
+        dismissed = window.localStorage.getItem(storageKey) === "done";
+      } catch (error) {}
+
+      card.hidden = dismissed;
+
+      var dismiss = card.querySelector("[data-dismiss]");
+      if (dismiss) {
+        dismiss.addEventListener("click", function () {
+          card.hidden = true;
+          try {
+            window.localStorage.setItem(storageKey, "done");
+          } catch (error) {}
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

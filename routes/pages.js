@@ -4,6 +4,15 @@ const signupPage = require("../controllers/signUpPage")
 const CreatePage = require("../controllers/createPage")
 const joinPage = require("../controllers/joinPage")
 const managepostersPage = require("../controllers/managepostersPage")
+const manageposterIdsPage = require("../controllers/manageposterIdsPage")
+const {
+  deletePosterAction,
+  assignPosterMeetingAction,
+  createPosterIdsAction,
+  importPosterIdsAction,
+  deletePosterIdsAction,
+  setPosterIdStatusAction
+} = require("../controllers/posterAdminActions")
 const joinMeeting = require("../controllers/data/joinMeeting")
 const createMeeting = require("../controllers/data/createMeeting")
 const login = require("../controllers/data/login")
@@ -67,7 +76,8 @@ router.use(express.urlencoded({ extended: true }));
 router.use(createOriginGuard(getAllowedOrigins()));
 router.get("/dashboard", loggedIn, dashboard)
 router.get("/", async(req,res) =>{
-    res.render("home")
+    // Signed-in visitors get a Dashboard button instead of Sign In
+    res.render("home", { signedIn: Boolean(req.cookies && req.cookies.posterUser) })
 })
 router.get("/terms", async(req,res) =>{
     res.render("terms")
@@ -83,6 +93,15 @@ router.get("/meetings", loggedIn, dashboard);
 router.get("/recordings", loggedIn, recordingsPage);
 router.get("/posteroverview", loggedIn, posterOverVIew); 
 router.get("/manageposters", loggedIn, managepostersPage)
+router.post("/manageposters/delete", writeLimiter, loggedIn, deletePosterAction)
+router.post("/manageposters/assign-meeting", writeLimiter, loggedIn, assignPosterMeetingAction)
+
+// Admin poster id management: create, delete, activate/deactivate
+router.get("/manageposterids", loggedIn, manageposterIdsPage)
+router.post("/manageposterids/create", writeLimiter, loggedIn, createPosterIdsAction)
+router.post("/manageposterids/import", uploadLimiter, upload.single("file"), loggedIn, importPosterIdsAction)
+router.post("/manageposterids/delete", writeLimiter, loggedIn, deletePosterIdsAction)
+router.post("/manageposterids/status", writeLimiter, loggedIn, setPosterIdStatusAction)
 router.get("/allChannels", channels)
  
 router.post("/createMeeting", writeLimiter, loggedIn, createMeeting)

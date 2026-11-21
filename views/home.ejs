@@ -75,7 +75,7 @@
             <a href="/terms" class="block p-2 text-gray-600 hover:bg-gray-100">Terms</a>
 
             <a href="/#faq" class="block p-2 text-gray-600 hover:bg-gray-100">FAQ</a>
-            <a href="/dashboard" class="block p-2 text-purple-600 hover:bg-gray-100">Sign In</a>
+            <a href="/dashboard" class="block p-2 text-purple-600 hover:bg-gray-100"><%= signedIn ? "Dashboard" : "Sign In" %></a>
         </div>
     </div>
     <!-- Desktop Navigation -->
@@ -88,7 +88,7 @@
                     <a href="/#features" class="text-gray-600 hover:text-purple-600">Features</a>
                     <a href="/#testimonials" class="text-gray-600 hover:text-purple-600">Testimonials</a>
                     <a href="/#faq" class="text-gray-600 hover:text-purple-600">FAQ</a>
-                    <a href="/dashboard" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700">Sign In</a>
+                    <a href="/dashboard" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700"><%= signedIn ? "Dashboard" : "Sign In" %></a>
                 </div>
             </div>
         </div>
@@ -417,41 +417,45 @@
         <h2 class="text-4xl font-bold text-center mb-12">Frequently Asked Questions</h2>
         <div class="space-y-4">
             <div class="border rounded-lg p-4">
-                <button class="flex justify-between items-center w-full" onclick="toggleFAQ(1)">
+                <button type="button" class="flex justify-between items-center w-full text-left" onclick="toggleFAQ(this)" aria-expanded="false">
                     <h3 class="text-lg font-semibold">How do I start a meeting?</h3>
-                    <i class="fas fa-chevron-down"></i>
+                    <i class="fas fa-chevron-down transition-transform duration-200"></i>
                 </button>
-                <p class="mt-2 text-gray-600 hidden">Click the "Host a Meeting" button to generate a unique meeting ID you can share with participants.</p>
+                <div class="faq-answer mt-2 text-gray-600 hidden">Click the "Host a Meeting" button to generate a unique meeting ID you can share with participants.</div>
             </div>
             <!-- Add more FAQ items -->
             <div class="border rounded-lg p-4">
-                <button class="flex justify-between items-center w-full" onclick="toggleFAQ(this)">
+                <button type="button" class="flex justify-between items-center w-full text-left" onclick="toggleFAQ(this)" aria-expanded="false">
                     <h3 class="text-lg font-semibold">How do I schedule a recurring class session?</h3>
-                    <i class="fas fa-chevron-down"></i>
+                    <i class="fas fa-chevron-down transition-transform duration-200"></i>
                 </button>
-                <p class="mt-2 text-gray-600 hidden"><ul>1. Click "Schedule Meeting" in your dashboard<br>
-                    2. Set your first session date/time<br>
-                    3. Check "Recurring Meeting" option<br>
-                    4. Select frequency (weekly/biweekly)<br>
-                    5. All sessions will appear in your calendar with the same join link</ul></p>
+                <div class="faq-answer mt-2 text-gray-600 hidden">
+                    <ol class="list-decimal pl-5 space-y-1">
+                        <li>Click "Schedule Meeting" in your dashboard</li>
+                        <li>Set your first session date/time</li>
+                        <li>Check "Recurring Meeting" option</li>
+                        <li>Select frequency (weekly/biweekly)</li>
+                        <li>All sessions will appear in your calendar with the same join link</li>
+                    </ol>
+                </div>
             </div>
             <!-- <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <button class="flex justify-between items-center w-full text-left" onclick="toggleFAQ(2)">
+                <button class="flex justify-between items-center w-full text-left" onclick="toggleFAQ(this)">
                     <h3 class="text-lg font-semibold">How do I schedule a recurring class session?</h3>
                     <i class="fas fa-chevron-down transition-transform duration-200"></i>
                 </button>
                 <p class="mt-2 text-gray-600 hidden">
                     
-                    </p>
+                    </div>
             </div> -->
 
             <!-- Technical Requirements -->
             <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <button class="flex justify-between items-center w-full text-left" onclick="toggleFAQ(3)">
+                <button class="flex justify-between items-center w-full text-left" onclick="toggleFAQ(this)">
                     <h3 class="text-lg font-semibold">What are the system requirements for ASFIMeet?</h3>
                     <i class="fas fa-chevron-down transition-transform duration-200"></i>
                 </button>
-                <p class="mt-2 text-gray-600 hidden pl-2">
+                <div class="faq-answer mt-2 text-gray-600 hidden pl-2">
                     <p><strong>Minimum requirements:</strong><br>
                     - Windows 10/macOS 10.13+/Linux or Chrome OS<br>
                     - Chrome 90+, Firefox 85+, Edge 90+<br>
@@ -461,16 +465,16 @@
                     <strong>Recommended for best experience:</strong><br>
                     - 4GB+ RAM, Quad-core processor<br>
                     - 5Mbps+ internet connection (for HD video)</p>
-                    </p>
+                    </div>
             </div>
 
             <!-- Security -->
             <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <button class="flex justify-between items-center w-full text-left" onclick="toggleFAQ(4)">
+                <button class="flex justify-between items-center w-full text-left" onclick="toggleFAQ(this)">
                     <h3 class="text-lg font-semibold">How are recordings stored and secured?</h3>
                     <i class="fas fa-chevron-down transition-transform duration-200"></i>
                 </button>
-                <p class="mt-2 text-gray-600 hidden pl-2">
+                <div class="faq-answer mt-2 text-gray-600 hidden pl-2">
                     <p>All recordings are:<br>
                     - Encrypted with AES-256 encryption at rest<br>
                     - Stored on secure academic cloud servers<br>
@@ -478,16 +482,16 @@
                     - Accessible only to meeting hosts and authorized participants<br><br>
                     
                     You can set password protection and download expiration dates for shared recordings.</p>
-                    </p>
+                    </div>
             </div>
 
             <!-- Integration -->
             <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <button class="flex justify-between items-center w-full text-left" onclick="toggleFAQ(5)">
+                <button class="flex justify-between items-center w-full text-left" onclick="toggleFAQ(this)">
                     <h3 class="text-lg font-semibold">Can I integrate ASFIMeet with my university's LMS?</h3>
                     <i class="fas fa-chevron-down transition-transform duration-200"></i>
                 </button>
-                <p class="mt-2 text-gray-600 hidden pl-2">
+                <div class="faq-answer mt-2 text-gray-600 hidden pl-2">
                     <p>Yes! ASFIMeet supports:<br><br>
                     
                     <strong>Direct integrations:</strong><br>
@@ -500,16 +504,16 @@
                     - Webhooks for event notifications<br><br>
                     
                     Contact your institution's IT department for setup assistance.</p>
-                    </p>
+                    </div>
             </div>
 
             <!-- Accessibility -->
             <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <button class="flex justify-between items-center w-full text-left" onclick="toggleFAQ(6)">
+                <button class="flex justify-between items-center w-full text-left" onclick="toggleFAQ(this)">
                     <h3 class="text-lg font-semibold">What accessibility features are available?</h3>
                     <i class="fas fa-chevron-down transition-transform duration-200"></i>
                 </button>
-                <p class="mt-2 text-gray-600 hidden pl-2">
+                <div class="faq-answer mt-2 text-gray-600 hidden pl-2">
                     <p>ASFIMeet includes:<br><br>
                     
                     <strong>For hearing impaired:</strong><br>
@@ -525,16 +529,16 @@
                     <strong>Other features:</strong><br>
                     - Adjustable text size<br>
                     - Color blindness friendly palettes</p>
-                    </p>
+                    </div>
             </div>
 
             <!-- Research Use -->
             <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <button class="flex justify-between items-center w-full text-left" onclick="toggleFAQ(7)">
+                <button class="flex justify-between items-center w-full text-left" onclick="toggleFAQ(this)">
                     <h3 class="text-lg font-semibold">Can I use ASFIMeet for research data collection?</h3>
                     <i class="fas fa-chevron-down transition-transform duration-200"></i>
                 </button>
-                <p class="mt-2 text-gray-600 hidden pl-2">
+                <div class="faq-answer mt-2 text-gray-600 hidden pl-2">
                     <p>Yes, with proper IRB approval:<br><br>
                     
                     <strong>Supported methods:</strong><br>
@@ -549,7 +553,7 @@
                     - Anonymization tools for transcripts<br><br>
                     
                     Contact our research support team for protocol-specific guidance.</p>
-                    </p>
+                    </div>
             </div>
         </div>
 
@@ -560,8 +564,6 @@
                 <i class="fas fa-envelope mr-2"></i>Contact Support
             </a>
             <p class="mt-3 text-sm text-gray-500">Average response time: 2 hours during academic terms</p>
-        </div>
-    </div>
         </div>
     </div>
 </section>
@@ -652,14 +654,22 @@
 
 <script>
     // FAQ Toggle
-    function toggleFAQ(index) {
-        const faqItem = event.currentTarget.parentElement;
-        const answer = faqItem.querySelector('p');
-        const icon = faqItem.querySelector('i');
-        
-        answer.classList.toggle('hidden');
-        icon.classList.toggle('fa-chevron-down');
-        icon.classList.toggle('fa-chevron-up');
+    function toggleFAQ(button) {
+        if (!button) return;
+
+        const faqItem = button.parentElement;
+        const answer = faqItem ? faqItem.querySelector('.faq-answer') : null;
+        const icon = button.querySelector('i');
+        if (!answer) return;
+
+        const wasClosed = answer.classList.contains('hidden');
+        answer.classList.toggle('hidden', !wasClosed);
+
+        if (icon) {
+            icon.classList.toggle('fa-chevron-down', !wasClosed);
+            icon.classList.toggle('fa-chevron-up', wasClosed);
+        }
+        button.setAttribute('aria-expanded', wasClosed ? 'true' : 'false');
     }
 
     // Smooth Scroll
