@@ -1,0 +1,26 @@
+<%
+// Meeting-specific link previews for the /join pages. `meta` comes from
+// buildJoinMeta() in controllers/joinPage.js.
+const shareMeta = locals.meta || {
+    title: `Join meeting | ${locals.meetingId || ""}`,
+    description: "Join this meeting on ASFIMeet.",
+    url: `https://asfischolar.net/join/${locals.meetingId || ""}`,
+    image: "https://res.cloudinary.com/diml8ljwa/image/upload/c_thumb,w_200,g_face/v1743261283/Screenshot_147_mjjyce.png"
+};
+%>
+    <title><%= shareMeta.title %></title>
+    <meta name="description" content="<%= shareMeta.description %>">
+    <link rel="canonical" href="<%= shareMeta.url %>">
+
+    <!-- Open Graph: link previews use the meeting's own title and schedule -->
+    <meta property="og:site_name" content="ASFIMeet">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="<%= shareMeta.title %>">
+    <meta property="og:description" content="<%= shareMeta.description %>">
+    <meta property="og:url" content="<%= shareMeta.url %>">
+    <meta property="og:image" content="<%= shareMeta.image %>">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= shareMeta.title %>">
+    <meta name="twitter:description" content="<%= shareMeta.description %>">
+    <meta name="twitter:image" content="<%= shareMeta.image %>">

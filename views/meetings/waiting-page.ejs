@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= meetingData.title %> - Meeting Starting Soon</title>
+    <%- include("../partials/meetingMeta.ejs") %>
     <link rel="icon" href="/assets/favicon_inverted.png" type="image/x-icon">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -59,7 +59,7 @@
                     </div>
                     
                 <div class="border-t border-gray-200 pt-4">
-                    <p class="text-sm text-gray-500">Scheduled for: <span class="meetingTime"><%=meetingData.time%></span></p>
+                    <p class="text-sm text-gray-500">Scheduled for: <span class="meetingTime"><%= meetingTime %></span></p>
                 </div>
             </div>
                         <%if(meetingData.description !== "<p><br></p>"){ %>

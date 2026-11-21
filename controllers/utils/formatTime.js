@@ -1,29 +1,21 @@
-
-    const formatDateTime = (isoString) => {
-  // Create date object and convert to Lagos timezone
+// Formats an ISO timestamp as "November 20, 2026 11:00 AM" in Lagos time.
+const formatDateTime = (isoString) => {
   const date = new Date(isoString);
-  
-  // Options for date formatting
-  const options = {
-    timeZone: 'Africa/Lagos',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  // toLocaleString renders "November 20, 2026 at 11:00 AM" for these options;
+  // drop the "at" so the date and time stay together.
+  return date.toLocaleString("en-US", {
+    timeZone: "Africa/Lagos",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
     hour12: true
-  };
-  
-  // Format the date
-  const formattedDate = date.toLocaleString('en-US', options);
-  
-  // Split the formatted string to rearrange parts
-  const [datePart, timePart, ampm] = formattedDate.split(/, | /);
-  
-  // Return in desired format: "Month Day, Year Hour:Minute AM/PM"
-  return `${datePart} ${timePart} ${ampm}`;
+  }).replace(" at ", " ");
 };
 
-
-
-module.exports = formatDateTime
+module.exports = formatDateTime;

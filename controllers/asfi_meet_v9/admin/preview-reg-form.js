@@ -1,6 +1,7 @@
 const { config } = require("dotenv");
 const meetingExists = require("../meetingExists");
 const dbPromise = require("../../../routes/dbPromise.config");
+const formatDateTime = require("../../utils/formatTime");
 config()
 const previewRegForm = async (req, res) => {
     try {
@@ -34,7 +35,7 @@ const previewRegForm = async (req, res) => {
                     isActive:true,
                     meetingData,
                     questions,
-
+                    meetingTime: formatDateTime(meetingData.time),
                 });
 
 

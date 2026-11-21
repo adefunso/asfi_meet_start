@@ -4,6 +4,35 @@ const dbPromise = require("../routes/dbPromise.config");
 const formatDateTime = require("./utils/formatTime");
 const jwt = require("jsonwebtoken")
 
+const OG_IMAGE = "https://res.cloudinary.com/diml8ljwa/image/upload/c_thumb,w_200,g_face/v1743261283/Screenshot_147_mjjyce.png";
+
+// Meeting-specific link previews for platforms that read the page without
+// running its JavaScript (WhatsApp, X/Twitter, LinkedIn, Slack...).
+const buildJoinMeta = (meetingData, meetingId) => {
+    const meetingTitle = (meetingData.title || "").trim() || meetingId;
+    const when = meetingData.time
+        ? new Date(meetingData.time).toLocaleString("en-US", {
+            timeZone: "Africa/Lagos",
+            weekday: "short",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true
+        })
+        : "";
+    const description = `Join ${meetingTitle} on ASFIMeet${when ? `. Scheduled for ${when} (WAT)` : ""}.`;
+    const domain = (process.env.CURRENT_DOMAIN || "https://asfischolar.net").replace(/\/+$/, "");
+
+    return {
+        title: `${meetingTitle} | ASFIMeet`,
+        description,
+        url: `${domain}/join/${meetingData.channel || meetingId}`,
+        image: OG_IMAGE
+    };
+};
+
 const joinPage = async (req, res) => {
     try {
         const meetingId = req.params.meeting;
@@ -19,6 +48,8 @@ const joinPage = async (req, res) => {
             return res.render("404", { message: "Meeting does not exist" });
         }
 
+        const formattedTime = formatDateTime(meetingData.time);
+        const meta = buildJoinMeta(meetingData, meetingId);
 
         const getCustomQuestions = await dbPromise.query("SELECT * FROM pre_reg_questions WHERE meeting_id = ?", [meetingData.id])
         const questions = getCustomQuestions[0]
@@ -45,7 +76,8 @@ const joinPage = async (req, res) => {
                             postersRoom,
                             meetingRoom,
                             isActive: true,
-                            isOwner: isGroupOwner
+                            isOwner: isGroupOwner,
+                            meta
                         });
                     } else {
                         return res.render("waiting-page", {
@@ -55,6 +87,8 @@ const joinPage = async (req, res) => {
                             isOwner: isGroupOwner,
                             meetingData,
                             isActive: true,
+                            meetingTime: formattedTime,
+                            meta
                         });
                     }
                 } else {
@@ -67,13 +101,13 @@ const joinPage = async (req, res) => {
                     meetingRoom,
                     isOwner: isGroupOwner,
                     isActive: true,
-                    csrfToken: req.csrfToken()
+                    csrfToken: req.csrfToken(),
+                    meetingTime: formattedTime
                 })
             }
         }
 
 
-        const formattedTime = formatDateTime(meetingData.time);
         // Handle private meeting access
 
         if (meetingData.privateMeeting == "yes" && !isGroupOwner && meetingData.preRegistration === "no") {
@@ -99,7 +133,9 @@ const joinPage = async (req, res) => {
                     isActive: true,
                     meetingData,
                     questions,
-                    byPass
+                    byPass,
+                    meetingTime: formattedTime,
+                    meta
                 });
             }
             const pre = req.query.pre
@@ -111,7 +147,8 @@ const joinPage = async (req, res) => {
                     isOwner: isGroupOwner,
                     meetingData,
                     isActive: true,
-                    meetingTime: formattedTime
+                    meetingTime: formattedTime,
+                    meta
                 });
             }
        if(meetingData.hasStarted == "test" && isGroupOwner && !pre){
@@ -120,7 +157,8 @@ const joinPage = async (req, res) => {
                 postersRoom,
                 meetingRoom,
                 isActive: true,
-                isOwner: isGroupOwner
+                isOwner: isGroupOwner,
+                meta
             });
         }
             if (!isGroupOwner && hasRegistered && (meetingData.hasStarted === "false" || meetingData.hasStarted === "test")) {
@@ -131,6 +169,8 @@ const joinPage = async (req, res) => {
                     isOwner: isGroupOwner,
                     meetingData,
                     isActive: true,
+                    meetingTime: formattedTime,
+                    meta
                 });
             }
         }
@@ -142,7 +182,8 @@ const joinPage = async (req, res) => {
                 postersRoom,
                 meetingRoom,
                 isActive: true,
-                isOwner: isGroupOwner
+                isOwner: isGroupOwner,
+                meta
             });
         }
 
@@ -154,7 +195,8 @@ const joinPage = async (req, res) => {
                 postersRoom,
                 meetingRoom,
                 isActive: true,
-                isOwner: isGroupOwner
+                isOwner: isGroupOwner,
+                meta
             });
         }
 

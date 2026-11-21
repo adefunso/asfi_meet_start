@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= meetingData.title %> - Registration</title>
+    <%- include("../partials/meetingMeta.ejs") %>
     <link rel="icon" href="/assets/favicon_inverted.png" type="image/x-icon">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -51,7 +51,7 @@
             <div class="w-full md:w-1/2 pr-0 md:pr-6 border-b md:border-b-0 md:border-r border-gray-200 pb-6 md:pb-0">
                 <div class="mb-6">
                     <h3 class="text-lg font-bold text-gray-800">Date & Time</h3>
-                    <p class="text-gray-700 meetingTime" id="countdown-text"><%= meetingData.time %></p>
+                    <p class="text-gray-700 meetingTime" id="countdown-text"><%= meetingTime %></p>
                     <div id="countdown-timer" class="mt-2 hidden">
                         <div class="flex space-x-4">
                             <div class="text-center">
