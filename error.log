@@ -4342,3 +4342,22 @@ Error: fetch failed (ECONNREFUSED) calling http://localhost:2020/admin/posterids
     at callPosterApi (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/utils/posterAdminApi.js:108:13)
     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
     at async manageposterIdsPage (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/manageposterIdsPage.js:48:14)
+[2026-11-21T14:49:41.631Z] ERROR Could not load poster counts for the manage meetings dashboard
+Error: fetch failed (ECONNREFUSED) calling http://localhost:2020/admin/posters/overview - check the POSTERS base URL and that the poster service is reachable
+    at callPosterApi (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/utils/posterAdminApi.js:108:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getPosterCounts (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/managemeetingsPage.js:15:22)
+    at async Promise.all (index 1)
+    at async dashboard (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/managemeetingsPage.js:69:48)
+[2026-11-21T14:50:06.876Z] ERROR Uncaught exception - shutting down
+Error: EIO: i/o error, write
+    at writeSync (node:fs:916:3)
+    at SyncWriteStream._write (node:internal/fs/sync_write_stream:27:5)
+    at writeOrBuffer (node:internal/streams/writable:572:12)
+    at _write (node:internal/streams/writable:501:10)
+    at Writable.write (node:internal/streams/writable:510:10)
+    at logInfo (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/utils/logger.js:66:20)
+    at Object.<anonymous> (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/app.js:27:3)
+    at Module._compile (node:internal/modules/cjs/loader:1705:14)
+    at Object..js (node:internal/modules/cjs/loader:1838:10)
+    at Module.load (node:internal/modules/cjs/loader:1441:32)

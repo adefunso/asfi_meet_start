@@ -50,6 +50,63 @@
     .ti{
         cursor: pointer;
     }
+
+    /* Manage meetings list: each meeting is a card - title/date header, then
+       one aligned row of buttons that wraps cleanly from the left */
+    .admin-meetings .meeting-item{
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 14px 16px;
+    }
+    .admin-meetings .meeting-item p{
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 4px 12px;
+        margin: 0;
+        line-height: 1.35;
+    }
+    .admin-meetings .meeting-item p span{
+        color: #b9b9b9;
+    }
+    .admin-meetings .meetingsControlsContainer{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 8px;
+    }
+    .admin-meetings .meetingsControlsContainer > a{
+        display: inline-flex;
+        text-decoration: none;
+    }
+    .admin-meetings .meetingsControlsContainer .button{
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 36px;
+        min-height: 36px;
+        margin: 0 !important;
+        padding: 0 14px !important;
+        font-size: 12px !important;
+        line-height: 1;
+        white-space: nowrap;
+        box-sizing: border-box;
+    }
+    .admin-meetings .meetingsControlsContainer .deleteMeeting{
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        /* Keeps the destructive action away from the everyday ones */
+        margin: 0 0 0 auto;
+        border-radius: 8px;
+    }
 </style>
 </head>
 <body>
@@ -87,7 +144,7 @@
             <button class="button" onclick="addMeeting()">Create Meeting</button>
         </div>
      
-<div class="meetingListContainer">
+<div class="meetingListContainer admin-meetings">
     <h3>Upcoming Meetings</h3>
     <div id="messageContainer" style="color:rgb(8, 199, 135)"></div>
     <div class="meetings" id="meetingList">
