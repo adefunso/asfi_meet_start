@@ -116,6 +116,9 @@
                   
                     <a href="/join/<%= meeting.channel %>?pre=true" target="_blank"><button class="button" >Start Meeting</button></a>
                     <button class="button" onclick="copyLink(`https://asfischolar.net/join/<%= meeting.channel %>`)">Copy Link</button>
+                        <% if(meeting.posterShowcaseUrl){ %>
+                        <a class="button" href="<%= meeting.posterShowcaseUrl %>" target="_blank" rel="noopener noreferrer">View all posters (<%= meeting.posterCount %>)</a>
+                        <% } %>
                         <button class="button" onclick="addToCalendar('<%= meeting.title %>', '<%= new Date(meeting.time).toISOString() %>')">Add to Calender</button>
                          <% if(meeting.preRegistration === "yes"){ %>
                         <button class="button" onclick="window.location.href='/participants/<%= meeting.channel%>'">Participants & Guests</button>
