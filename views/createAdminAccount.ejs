@@ -34,36 +34,29 @@
 <body class="admin">
     <%- include('partials/dashboardSidebar.ejs', { sidebarRole: "admin" }) %>
 
-    <div class="headAdmin">Add Admin</div>
     <div class="container">
-       
         <div class="createMeetingForm">
-            <h1>ASFIMeet Events</h1>
-            <input type="text" id="AdminName" placeholder="Enter admin ASFIScholar username or email">
-
-         
-
-            <button onclick="addAdmin()">Create Admin</button>
+            <h1>Add Admin</h1>
+            <input class="input" type="text" id="AdminName" placeholder="Enter admin ASFIScholar username or email">
+            <button class="button" onclick="addAdmin()">Create Admin</button>
         </div>
-        
 
-        <div class="meetings" id="AdminList">
+        <div class="meetingListContainer meeting-cards">
             <h3>Admin Accounts</h3>
-            <% if(adminAccounts && adminAccounts.length > 0) { %>
-                <% adminAccounts.forEach(function(admin) { %>
-                    <div class="meeting-item">
-                        <p><strong><%= admin.user %></strong></p>
-                        
-                        <div class="meetingsControlsContainer">
-                    
-                        <button onclick="deleteAdmin('<%= admin.id %>')" class="deleteAdmin">Remove Access</button>
-
+            <div class="meetings" id="AdminList">
+                <% if(adminAccounts && adminAccounts.length > 0) { %>
+                    <% adminAccounts.forEach(function(admin) { %>
+                        <div class="meeting-item">
+                            <p><strong><%= admin.user %></strong></p>
+                            <div class="meetingsControlsContainer">
+                                <button onclick="deleteAdmin('<%= admin.id %>')" class="button">Remove Access</button>
+                            </div>
                         </div>
-                    </div>
-                <% }); %>
-            <% } else { %>
-                <p>No upcoming meetings.</p>
-            <% } %>
+                    <% }); %>
+                <% } else { %>
+                    <p>No admin accounts yet.</p>
+                <% } %>
+            </div>
         </div>
     </div>
 
@@ -98,10 +91,8 @@
                     AdminItem.innerHTML = `
                         <p><strong>${name}</strong></p>
                         <div class="meetingsControlsContainer">
-                    
-                        <button onclick="deleteAdmin('${data.AdminId}')" class="deleteAdmin">Remove Access</button>
+                            <button onclick="deleteAdmin('${data.AdminId}')" class="button">Remove Access</button>
                         </div>
-                        
                     `;
 
                     AdminList.prepend(AdminItem);

@@ -303,6 +303,24 @@ button{
     margin: auto;
 }
 
+/* Regular-user dashboard: one full-width card list instead of the old banner */
+.user .container{
+    align-items: center;
+}
+.user .meetingListContainer{
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.user .meetingListContainer .meetings{
+    width: 100%;
+    margin: 0;
+}
+.meetingListTitle{
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
 .user .headAdmin{
     margin-top: 10px;
 }
@@ -315,6 +333,64 @@ button{
 .deleteMeeting{
     background-color: transparent;
     
+}
+
+/* Card list pages (manage meetings, add admin, user dashboard): each row is a
+   card with a title line and one aligned row of buttons that wraps cleanly
+   from the left */
+.meeting-cards .meeting-item{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px 16px;
+}
+.meeting-cards .meeting-item p{
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 12px;
+    margin: 0;
+    line-height: 1.35;
+}
+.meeting-cards .meeting-item p span{
+    color: #b9b9b9;
+}
+.meeting-cards .meetingsControlsContainer{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+}
+.meeting-cards .meetingsControlsContainer > a{
+    display: inline-flex;
+    text-decoration: none;
+}
+.meeting-cards .meetingsControlsContainer .button{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    min-height: 36px;
+    margin: 0 !important;
+    padding: 0 14px !important;
+    font-size: 12px !important;
+    line-height: 1;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+.meeting-cards .meetingsControlsContainer .deleteMeeting{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    /* Keeps the destructive action away from the everyday ones */
+    margin: 0 0 0 auto;
+    border-radius: 8px;
 }
 
 .radioContainer {

@@ -30,26 +30,28 @@
     <link rel="canonical" href="https://asfischolar.net">
   <link rel="stylesheet" href="/css/dashboard.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-
-</head>
 </head>
 <body class="user">
     <%- include('partials/dashboardSidebar.ejs', { sidebarRole: "user" }) %>
     <div class="container">
-        <div class="headAdmin">ASFIMeet Events</div>
-        <h3>Upcoming Meetings</h3>
-        <div class="meetings" id="meetingList">
-            
-            <% if(publicMeetings && publicMeetings.length > 0){ %>
-                <% publicMeetings.forEach(function(meeting) { %>
-                    <div class="meeting-item">
-                        <p><strong><%= meeting.title %></strong> <span><%= meeting.time %></span></p>
-                        <button class="button" onclick="addToCalendar('<%= meeting.title %>', '<%= meeting.time %>')">Add to Calendar</button>
-                    </div>
-                <% }); %>
-            <% } else { %>
-                <p>No upcoming meetings.</p>
-            <%} %>
+        <div class="meetingListContainer meeting-cards">
+            <h1 class="meetingListTitle">ASFIMeet Events</h1>
+            <h3>Upcoming Meetings</h3>
+            <div class="meetings" id="meetingList">
+
+                <% if(publicMeetings && publicMeetings.length > 0){ %>
+                    <% publicMeetings.forEach(function(meeting) { %>
+                        <div class="meeting-item">
+                            <p><strong><%= meeting.title %></strong> <span><%= meeting.time %></span></p>
+                            <div class="meetingsControlsContainer">
+                                <button class="button" onclick="addToCalendar('<%= meeting.title %>', '<%= meeting.time %>')">Add to Calendar</button>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p>No upcoming meetings.</p>
+                <%} %>
+            </div>
         </div>
     </div>
 

@@ -4361,3 +4361,10 @@ Error: EIO: i/o error, write
     at Module._compile (node:internal/modules/cjs/loader:1705:14)
     at Object..js (node:internal/modules/cjs/loader:1838:10)
     at Module.load (node:internal/modules/cjs/loader:1441:32)
+[2026-11-21T15:21:55.663Z] ERROR Could not load poster counts for the manage meetings dashboard
+Error: fetch failed (ECONNREFUSED) calling http://localhost:2020/admin/posters/overview - check the POSTERS base URL and that the poster service is reachable
+    at callPosterApi (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/utils/posterAdminApi.js:108:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getPosterCounts (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/managemeetingsPage.js:15:22)
+    at async Promise.all (index 1)
+    at async dashboard (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/managemeetingsPage.js:69:48)
