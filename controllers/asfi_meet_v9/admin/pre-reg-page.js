@@ -1,5 +1,6 @@
 const { config } = require("dotenv");
 const meetingExists = require("../meetingExists");
+const formatDateTime = require("../../utils/formatTime");
 config()
 const adminPreReg = async (req, res) => {
     try {
@@ -28,6 +29,7 @@ const adminPreReg = async (req, res) => {
                     isOwner: isGroupOwner,
                     isActive:true,
                     meetingData,
+                    meetingTime: formatDateTime(meetingData.time),
                     csrfToken: req.csrfToken(),
                 });
 
