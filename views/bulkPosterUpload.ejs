@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASFIMeet | Bulk Poster Upload</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/assets/favicon_inverted.png" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Roboto", sans-serif;
+      background-color: #222;
+      color: #f2f2f2;
+      font-size: 15px;
+    }
+    .main-content {
+      margin-left: 270px;
+      padding: 20px;
+      width: calc(100% - 270px);
+      transition: margin-left 0.3s;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    header h1 { font-size: 20px; }
+    .header-sub { margin-top: 6px; font-size: 13px; color: #b9b9c3; }
+    .ghost-btn {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid #555;
+      /* color: #eee/; */
+      text-decoration: none;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .ghost-btn:hover { background-color: #444; color:#eee}
+
+    .card {
+      margin-top: 20px;
+      padding: 22px;
+      background-color: #2c2c31;
+      border: 1px solid #3f3f46;
+      border-radius: 12px;
+    }
+    .card h2 { font-size: 16px; margin-bottom: 4px; }
+    .card .sub { font-size: 13px; color: #a9a9b3; line-height: 1.6; margin-bottom: 18px; }
+
+    .alert {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    .alert--error { background: #3b1f22; color: #f8b4b4; border: 1px solid #6b2b31; }
+    .alert--success { background: #1e3324; color: #b7f0c4; border: 1px solid #2f5c3c; }
+    .alert--warning { background: #3a3320; color: #f2ddab; border: 1px solid #6b5a2b; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+    .field label { font-size: 13px; color: #c9c9d3; }
+    .field select,
+    .field input[type="text"] {
+      padding: 11px 12px;
+      border-radius: 9px;
+      border: 1px solid #4a4a55;
+      background-color: #262626;
+      color: #f2f2f2;
+      font-size: 14px;
+      max-width: 520px;
+    }
+    .field select:focus, .field input:focus { outline: 2px solid #8b5cf6; }
+
+    .dropzone {
+      display: block;
+      padding: 28px 18px;
+      border: 2px dashed #5c427c;
+      border-radius: 12px;
+      background-color: #262029;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+    .dropzone:hover, .dropzone.is-dragging { background-color: #2f2437; border-color: #a880c9; }
+    .dropzone strong { display: block; font-size: 15px; margin-bottom: 6px; }
+    .dropzone span { font-size: 13px; color: #b6aec4; }
+    .dropzone input[type="file"] { display: none; }
+
+    .selection { margin-top: 18px; }
+    .selection table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .selection th, .selection td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid #3f3f46;
+      vertical-align: top;
+    }
+    .selection th { color: #a9a9b3; font-weight: 500; text-transform: uppercase; font-size: 11px; letter-spacing: 0.05em; }
+    .selection td.file { color: #d6d0e2; max-width: 280px; word-break: break-word; }
+    .selection td.email { color: #c9b3e6; word-break: break-all; }
+    .selection .invalid { color: #f8b4b4; }
+    .selection .edit-field {
+      padding: 4px 8px;
+      border: 1px dashed #4a4a55;
+      border-radius: 7px;
+      background: none;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      max-width: 260px;
+      word-break: break-word;
+      cursor: text;
+    }
+    .selection .edit-field:hover { border-color: #8b5cf6; background-color: #2f2437; }
+    .selection .edit-field.is-empty { color: #9a93a8; }
+    .selection .inline-input {
+      width: 100%;
+      max-width: 260px;
+      padding: 7px 9px;
+      border-radius: 7px;
+      border: 1px solid #8b5cf6;
+      background-color: #262626;
+      color: #f2f2f2;
+      font-size: 13px;
+    }
+    .selection .link-btn {
+      padding: 0;
+      border: none;
+      background: none;
+      color: #f8b4b4;
+      font-size: 12px;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .selection .link-btn:hover { color: #ffd0d0; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge--ok { background: #1e3324; color: #b7f0c4; border: 1px solid #2f5c3c; }
+    .badge--error { background: #3b1f22; color: #f8b4b4; border: 1px solid #6b2b31; }
+    .badge--info { background: #2b2138; color: #d9c8f0; border: 1px solid #5c427c; }
+
+    .actions { display: flex; align-items: center; gap: 14px; margin-top: 20px; flex-wrap: wrap; }
+    .primary-btn {
+      padding: 12px 22px;
+      border: none;
+      border-radius: 10px;
+      background: purple;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .primary-btn:hover { background: #6b1f8f; }
+    .primary-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .actions .note { font-size: 12px; color: #9aa0a6; }
+    .actions [hidden] { display: none; }
+    .actions .note--error { color: #f8b4b4; }
+
+    .results { margin-top: 22px; }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .summary-card {
+      background-color: #333;
+      border: 1px solid #3f3f46;
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .summary-card .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #a9a9b3; }
+    .summary-card .value { display: block; margin-top: 8px; font-size: 24px; font-weight: 700; }
+    .results td.message { color: #c9c9d3; max-width: 420px; }
+
+    @media (max-width: 900px) {
+      .main-content { margin-left: 0; margin-top: 70px; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <%- include('partials/dashboardSidebar.ejs', { sidebarRole: "admin" }) %>
+
+  <div class="main-content">
+    <header>
+      <div>
+        <h1>Bulk Poster Upload</h1>
+        <p class="header-sub">Upload several poster PDFs at once and create presenter accounts automatically</p>
+      </div>
+      <a href="/manageposters" class="ghost-btn">Back to posters</a>
+    </header>
+
+    <% if (error) { %>
+      <div class="alert alert--error"><%= error %></div>
+    <% } %>
+
+    <% if (loadError) { %>
+      <div class="alert alert--warning"><%= loadError %></div>
+    <% } %>
+
+    <section class="card">
+      <h2>Select meeting and PDFs</h2>
+      <p class="sub">
+        Name each PDF as <strong>Poster title_presenter@email.com.pdf</strong> &mdash; everything before the
+        last underscore becomes the poster title and the email after it belongs to the presenter.
+        Presenters without an ASFIScholar account get one automatically, with a temporary password
+        and a link to update their details emailed to them. If a file name is missing the title or a
+        valid email, click that cell to type it in, or remove the file from the list.
+      </p>
+
+      <form id="bulk-upload-form" method="POST" action="/manageposters/bulk" enctype="multipart/form-data">
+        <div class="field">
+          <label for="meeting">Meeting *</label>
+          <select id="meeting" name="meeting" required>
+            <option value="">Select the meeting for these posters</option>
+            <% meetings.forEach(function (meeting) { %>
+              <option value="<%= meeting.meeting %>" <%= selectedMeeting === meeting.meeting ? "selected" : "" %>><%= meeting.name %></option>
+            <% }); %>
+          </select>
+        </div>
+
+        <label class="dropzone" id="dropzone" for="posters">
+          <strong>Choose PDFs or drop them here</strong>
+          <span>Up to <%= maxFiles %> files, </span><span><%= maxFileMb %> MB each. Only .pdf files are accepted.</span>
+          <input type="file" id="posters" name="posters" accept="application/pdf,.pdf" multiple>
+        </label>
+
+        <input type="hidden" name="overrides" id="overrides" value="">
+
+        <div class="selection" id="selection" hidden>
+          <table>
+            <thead>
+              <tr>
+                <th>File</th>
+                <th>Poster title</th>
+                <th>Presenter email</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="selection-rows"></tbody>
+          </table>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="primary-btn" id="upload-btn" disabled>Upload posters</button>
+          <button type="button" class="ghost-btn" id="clear-all-btn" hidden>Clear all</button>
+          <span class="note" id="upload-note">Select at least one PDF to continue.</span>
+        </div>
+      </form>
+    </section>
+
+    <% if (summary) { %>
+      <section class="results">
+        <% if (summary.emailsFailed > 0) { %>
+          <div class="alert alert--warning" style="margin-top: 0;">
+            <%= summary.emailsFailed %> welcome email(s) could not be sent. Those posters and accounts were still created &mdash;
+            forward each presenter the setup link shown in the results below so they can set a password.
+          </div>
+        <% } %>
+        <div class="summary-grid">
+          <div class="summary-card">
+            <span class="label">PDFs processed</span>
+            <span class="value"><%= summary.total %></span>
+          </div>
+          <div class="summary-card">
+            <span class="label">Posters created</span>
+            <span class="value"><%= summary.created %></span>
+          </div>
+          <div class="summary-card">
+            <span class="label">Failed</span>
+            <span class="value"><%= summary.failed %></span>
+          </div>
+          <div class="summary-card">
+            <span class="label">New accounts</span>
+            <span class="value"><%= summary.accounts %></span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Results</h2>
+          <p class="sub">Every PDF is listed below with what happened to it.</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>File</th>
+                <th>Poster title</th>
+                <th>Presenter email</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% results.forEach(function (result) { %>
+                <tr>
+                  <td class="file"><%= result.fileName %></td>
+                  <td><%= result.title || "—" %></td>
+                  <td class="email"><%= result.email || "—" %></td>
+                  <td class="message">
+                    <% if (result.ok) { %>
+                      <span class="badge badge--ok">Created</span>
+                    <% } else { %>
+                      <span class="badge badge--error">Not created</span>
+                    <% } %>
+                    <% if (result.accountCreated) { %>
+                      <span class="badge badge--info">New account</span>
+                    <% } %>
+                    <% if (result.emailFailed) { %>
+                      <span class="badge badge--error">Email failed</span>
+                    <% } %>
+                    <br><%= result.message %>
+                    <% if (result.setupUrl) { %>
+                      <br><a href="<%= result.setupUrl %>" style="color: #c9b3e6; word-break: break-all;"><%= result.setupUrl %></a>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    <% } %>
+  </div>
+
+  <script>
+    window.BULK_POSTER_LIMITS = { maxFiles: <%= maxFiles %>, maxFileMb: <%= maxFileMb %> };
+  </script>
+  <script src="/js/bulkPosterUpload.js"></script>
+</body>
+</html>

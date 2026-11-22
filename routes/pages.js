@@ -4,6 +4,8 @@ const signupPage = require("../controllers/signUpPage")
 const CreatePage = require("../controllers/createPage")
 const joinPage = require("../controllers/joinPage")
 const managepostersPage = require("../controllers/managepostersPage")
+const bulkPosterUploadPage = require("../controllers/bulkPosterUploadPage")
+const { bulkPosterUploadAction, receivePosterFiles } = require("../controllers/bulkPosterUploadAction")
 const manageposterIdsPage = require("../controllers/manageposterIdsPage")
 const {
   deletePosterAction,
@@ -95,6 +97,10 @@ router.get("/posteroverview", loggedIn, posterOverVIew);
 router.get("/manageposters", loggedIn, managepostersPage)
 router.post("/manageposters/delete", writeLimiter, loggedIn, deletePosterAction)
 router.post("/manageposters/assign-meeting", writeLimiter, loggedIn, assignPosterMeetingAction)
+
+// Bulk poster upload: several PDFs at once, named "title_presenter@email.com.pdf"
+router.get("/manageposters/bulk", loggedIn, bulkPosterUploadPage)
+router.post("/manageposters/bulk", uploadLimiter, loggedIn, receivePosterFiles, bulkPosterUploadAction)
 
 // Admin poster id management: create, delete, activate/deactivate
 router.get("/manageposterids", loggedIn, manageposterIdsPage)

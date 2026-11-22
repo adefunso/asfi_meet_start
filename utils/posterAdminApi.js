@@ -37,7 +37,8 @@ function describeNetworkError(error, url) {
 
 async function requestOnce(url, apiKey, options) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  const timeoutMs = Number(options.timeoutMs) || TIMEOUT_MS;
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     return await fetch(url, {
@@ -77,8 +78,9 @@ async function callPosterApi(pathname, options = {}) {
     try {
       response = await requestOnce(url, apiKey, options);
     } catch (error) {
-      // One retry covers a transient DNS/socket blip before we report failure
-      if (error.name === "AbortError") throw error;
+      // One retry covers a transient DNS/socket blip before we report failure.
+      // Callers with a non-idempotent request (e.g. creating a poster) opt out.
+      if (error.name === "AbortError" || options.retry === false) throw error;
       await new Promise((resolve) => setTimeout(resolve, 250));
       response = await requestOnce(url, apiKey, options);
     }
@@ -102,7 +104,7 @@ async function callPosterApi(pathname, options = {}) {
     return payload;
   } catch (error) {
     if (error.name === "AbortError") {
-      throw new Error(`Poster admin API timed out after ${TIMEOUT_MS}ms calling ${url.origin}${url.pathname}`);
+      throw new Error(`Poster admin API timed out after ${Number(options.timeoutMs) || TIMEOUT_MS}ms calling ${url.origin}${url.pathname}`);
     }
     if (error.isNetworkError || error.name === "TypeError") {
       throw new Error(describeNetworkError(error, url));

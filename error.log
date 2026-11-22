@@ -4368,3 +4368,65 @@ Error: fetch failed (ECONNREFUSED) calling http://localhost:2020/admin/posters/o
     at async getPosterCounts (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/managemeetingsPage.js:15:22)
     at async Promise.all (index 1)
     at async dashboard (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/managemeetingsPage.js:69:48)
+[2026-11-22T16:12:10.552Z] ERROR Could not validate login for GET /dashboard
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:14976:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async validateSession (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/utils/validateSession.js:11:26)
+    at async loggedIn (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/data/loggedIn.js:18:22)
+[2026-11-22T16:18:40.076Z] WARN Login rejected for GET /dashboard: [object Object]
+[2026-11-22T16:23:44.347Z] ERROR Could not validate login for GET /dashboard
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:14976:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async validateSession (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/utils/validateSession.js:11:26)
+    at async loggedIn (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/data/loggedIn.js:18:22)
+[2026-11-22T16:37:12.554Z] ERROR Could not validate login for GET /dashboard
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:14976:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async validateSession (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/utils/validateSession.js:11:26)
+    at async loggedIn (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/data/loggedIn.js:18:22)
+[2026-11-22T16:38:37.030Z] ERROR Could not load poster counts for the manage meetings dashboard
+Error: fetch failed (ECONNREFUSED) calling http://localhost:2020/admin/posters/overview - check the POSTERS base URL and that the poster service is reachable
+    at callPosterApi (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/utils/posterAdminApi.js:110:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getPosterCounts (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/managemeetingsPage.js:15:22)
+    at async Promise.all (index 1)
+    at async dashboard (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/managemeetingsPage.js:69:48)
+[2026-11-22T17:16:52.375Z] ERROR Could not create the poster from Caper Diem_ lordkz19@gmail.com.pdf
+Error: Poster account API is not configured
+    at ensurePosterAccount (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/utils/scholarAccounts.js:62:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async processPoster (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/bulkPosterUploadAction.js:145:21)
+    at async bulkPosterUploadAction (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/bulkPosterUploadAction.js:232:20)
+[2026-11-22T17:16:52.516Z] ERROR Could not create the poster from Execution of the National School Nutrition Programme in Eastern Cape Rural Schools_A.A. Oyelana_ bensonmichaelowen@gmail.com.pdf
+Error: Poster account API is not configured
+    at ensurePosterAccount (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/utils/scholarAccounts.js:62:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async processPoster (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/bulkPosterUploadAction.js:145:21)
+    at async bulkPosterUploadAction (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/bulkPosterUploadAction.js:232:20)
+[2026-11-22T17:21:19.532Z] ERROR Could not create the poster from Caper Diem.pdf
+Error: http://localhost:2020/admin/posters/bulk-upload returned text/html; charset=utf-8 (status 413) instead of JSON - check that the poster app at POSTERS has the admin endpoints deployed
+    at callPosterApi (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/utils/posterAdminApi.js:93:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async processPoster (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/bulkPosterUploadAction.js:147:20)
+    at async bulkPosterUploadAction (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/bulkPosterUploadAction.js:232:20)
+[2026-11-22T17:21:19.724Z] ERROR Could not create the poster from Caper Diem_ lordkz19@gmail.com.pdf
+Error: http://localhost:2020/admin/posters/bulk-upload returned text/html; charset=utf-8 (status 413) instead of JSON - check that the poster app at POSTERS has the admin endpoints deployed
+    at callPosterApi (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/utils/posterAdminApi.js:93:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async processPoster (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/bulkPosterUploadAction.js:147:20)
+    at async bulkPosterUploadAction (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/bulkPosterUploadAction.js:232:20)
+[2026-11-22T17:21:21.302Z] ERROR Could not create the poster from Execution of the National School Nutrition Programme in Eastern Cape Rural Schools_A.A. Oyelana_ bensonmichaelowen@gmail.com.pdf
+Error: http://localhost:2020/admin/posters/bulk-upload returned text/html; charset=utf-8 (status 413) instead of JSON - check that the poster app at POSTERS has the admin endpoints deployed
+    at callPosterApi (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/utils/posterAdminApi.js:93:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async processPoster (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/bulkPosterUploadAction.js:147:20)
+    at async bulkPosterUploadAction (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/bulkPosterUploadAction.js:232:20)
+[2026-11-22T17:31:30.263Z] ERROR Could not create the poster from Caper Diem.pdf
+Error: Could not create the poster
+    at callPosterApi (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/utils/posterAdminApi.js:101:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async processPoster (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/bulkPosterUploadAction.js:147:20)
+    at async bulkPosterUploadAction (/home/owen/Documents/GitHub/ASFISCHOLAR/asfi_meet_start/controllers/bulkPosterUploadAction.js:232:20)
