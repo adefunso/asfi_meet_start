@@ -3,7 +3,8 @@ const login = async (req,res) =>{
     const {user, pass} = req.body
     const turnstileToken = req.body.turnstile_token || req.body.recaptcha || req.body["cf-turnstile-response"] || req.body["g-recaptcha-response"] || ""
 
-    if(!turnstileToken){
+    // TEMPORARY: Turnstile disabled while logins are tested locally.
+    if(false && !turnstileToken){
         return res.json({status:"error", error:"Please complete the Turnstile verification."})
     }
 

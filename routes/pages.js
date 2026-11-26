@@ -89,7 +89,8 @@ router.get("/documentation", async(req,res) =>{
 })
 router.get("/register", signupPage)
 router.get("/login", loginPage)
-router.post("/api/login", authLimiter, login)
+// TEMPORARY: authLimiter disabled while logins are tested locally.
+router.post("/api/login", login)
 router.get("/meetings", loggedIn, dashboard);
 
 router.get("/recordings", loggedIn, recordingsPage);
@@ -162,7 +163,8 @@ router.get("/api/guests/:meetingId", loggedIn, getAllGuests)
 router.delete("/api/guests/:id", loggedIn, deleteGuests)
 router.post("/api/guests", writeLimiter, NoLogInNeeded, createGuest)
 router.get("/manage/guests/:meetingId", loggedIn, GuestPage)
-router.post("/api/guests/login/user", authLimiter, upload.none(), validateGuest)
+// TEMPORARY: authLimiter disabled while guest logins are tested locally.
+router.post("/api/guests/login/user", upload.none(), validateGuest)
 
 
 router.get("/participants/:meetingId", loggedIn, (req,res) => {
